@@ -1,0 +1,43 @@
+<IfModule mod_headers.c>
+
+   ##########################################################################
+   # 1.) ENABLE CORS PRE-FLIGHT REQUESTS
+   # e.g. PUT, DELETE, OPTIONS, ...
+   # we need to set Access-Control-Allow-Headers and
+   # Access-Control-Allow-Methods for allowed domain(s)
+   ##########################################################################
+
+   # first check for pre-flight headers and set as environment variables
+   # e.g. header method-a is set here
+   SetEnvIf ^Access-Control-Request-Method$ "method-a" METHOD_A
+   SetEnvIf ^Access-Control-Request-Headers$ "^Content-Type$" HEADER_A
+
+   # set corresponding response pre-flight headers for allowed domain(s)
+   Header set Access-Control-Request-Methods "method-a" env=METHOD_A
+   Header set Access-Control-Request-Headers "content-type" env=HEADER_A
+
+   # TODO: add allowed additional pre-flight requests here...
+
+   #########################################################################
+   # 2.) ENABLE CORS *SIMPLE REQUESTS* (vs. Pre-Flight Requests from above)
+   # e.g. GET, POST and HEAD requests
+   # we need to set Access-Control-Allow-Origin header for allowed domain(s)
+   # also note that POST requests need to match one of the following
+   # Content-Type:
+   # 1) application/x-www-form-urlencoded
+   # 2) multipart/form-data
+   # 3) text/plain
+   #########################################################################
+
+
+   # e.g. origin = https://host-b.local
+   SetEnvIfNoCase Origin "https://host-b.local" AccessControlAllowOrigin=$0
+   Header set Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
+
+   # generic regexp match for more flexibel use cases
+   #SetEnvIfNoCase Origin "((http(s?))?://(www\.)?(host\-a|host\-b)\.local)(:\d+)?$" AccessControlAllowOrigin=$0
+   #Header set Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
+
+   # TODO: add additional allowed simple requests here...
+
+</IfModule>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Bareando</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+        <link rel="shortcut icon" href="/img/icono.ico" type="image/x-icon" />
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="css/styles.css" rel="stylesheet">
+	</head>
+    <script>
+	$(window).load(function() {
+		$(".se-pre-con").delay(1500).fadeOut("slow");
+	});
+    </script>
+	<body>
+        <div class="se-pre-con"></div>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><img height="30px" src="img/logo2.png"></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div style="float:left; margin-top: 10px;" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="paginacion/">Tapas</a>
+                    </li>
+                    <li>
+                        <a href="paginacion/">Copas</a>
+                    </li>
+                    <li>
+                        <a href="paginacion/">Vinos</a>
+                    </li>
+                    <li>
+                        <a href="paginacion/">Cerveza</a>
+                    </li>
+                </ul>
+            </div>
+            <div style="margin-top: 15px;" id="botonlogin" class="btn btn-default navbar-brand loginbtn">Login</div>
+            <div id="botonlogin" style="margin-top: 15px; margin-right: 3%;" class="btn btn-default navbar-brand loginbtn"><a href="registro/">Registro</a></div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+                <div class="jumbotron text-center cabecera">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-12 col-sm-12">
+                  <img src="img/logo2.png" width="100%">
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="well trescolumnas">
+                        <div class="cero"><h3>El bar del tito Roberts</h3></div>
+                        <div class="uno"><img class="img-responsive" src="img/bar.jpg"></div>
+                        <div class="dos">
+                            <ul>
+                                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+                                <li>    Fusce eu metus non elit pulvinar tempus ac sit amet augue.</li>
+                                <li>    Nullam et lacus posuere magna viverra maximus sed quis magna.</li>
+                                <li>    Suspendisse et lectus non turpis tempus volutpat ac vel justo.</li>
+                                <li>    Maecenas tristique quam nec augue dictum tincidunt.</li>
+                                <li>    Donec fermentum justo eget justo pellentesque, ut condimentum enim tincidunt.</li>
+                                <li>    Sed imperdiet ex eu augue accumsan, at vulputate quam feugiat.</li>
+                                <li>    In ultrices ligula sit amet nibh aliquam, et interdum lorem finibus.</li>
+                            </ul>
+                        </div>
+                        <div class="tres"><h2>7.25</h2>/10</div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <a href="paginacion/">
+                    <div class="col-md-4">
+                        <div class="well logo_cont">
+                            <img class="img-responsive logo" src="img/copa1.png">
+                            <p class="logo text">Bares de Copas/Nocturnos</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="paginacion/">
+                    <div class="col-md-4">
+                        <div class="well logo_cont">
+                            <img class="img-responsive logo" src="img/tapa.png">
+                            <p class="logo text">Bares de Tapas</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="paginacion/">
+                    <div class="col-md-4">
+                        <div class="well logo_cont">
+                            <img class="img-responsive logo" src="img/wine.png">
+                            <p class="logo text">Vinotecas</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <hr>
+        <div id="loginModal" class="modal fixed" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="cerrar" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h1 class="text-center">Login</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form col-md-12 center-block">
+                            <div class="form-group">
+                                <input type="text" class="form-control input-lg" placeholder="Email">
+                            </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control input-lg" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-lg btn-block">Sign In</button>
+                            <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-md-12">
+                            <button id="cancelar" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<script src="js/bootstrap.min.js"></script>
+	</body>
+    <script>
+            $(document).ready(function(){
+        $("#loginModal").popup({
+            type: 'overlay',
+            autoopen: 'true',
+            horizontal: 'center',
+            vertical: 'middle'
+        });
+    });
+        $("#botonlogin, #cerrar, #cancelar").click(function() {
+            $("#loginModal").toggleClass("ver");
+        });
+    </script>
+</html>
