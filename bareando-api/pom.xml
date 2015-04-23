@@ -50,6 +50,11 @@
             <artifactId>jersey-media-moxy</artifactId>
         </dependency>
         -->
+        <dependency>
+        	<groupId>com.thetransactioncompany</groupId>
+        	<artifactId>cors-filter</artifactId>
+        	<version>1.9.3</version>
+        </dependency>
     </dependencies>
     <properties>
         <jersey.version>2.16</jersey.version>
