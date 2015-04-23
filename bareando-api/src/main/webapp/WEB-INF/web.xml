@@ -63,4 +63,9 @@
 		</init-param>
 
 	</filter>
+	<filter-mapping>
+		<!-- CORS Filter mapping -->
+		<filter-name>CORS</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>
