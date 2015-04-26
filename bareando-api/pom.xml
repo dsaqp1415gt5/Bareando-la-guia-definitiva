@@ -55,6 +55,26 @@
         	<artifactId>cors-filter</artifactId>
         	<version>1.9.3</version>
         </dependency>
+        <dependency>
+        	<groupId>mysql</groupId>
+        	<artifactId>mysql-connector-java</artifactId>
+        	<version>5.1.34</version>
+        </dependency>
+        <dependency>
+        	<groupId>commons-codec</groupId>
+        	<artifactId>commons-codec</artifactId>
+        	<version>20041127.091804</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.glassfish.jersey.media</groupId>
+        	<artifactId>jersey-media-moxy</artifactId>
+        	<version>2.17</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.glassfish.jersey.ext</groupId>
+        	<artifactId>jersey-declarative-linking</artifactId>
+        	<version>2.17</version>
+        </dependency>
     </dependencies>
     <properties>
         <jersey.version>2.16</jersey.version>
