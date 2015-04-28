@@ -11,9 +11,12 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
@@ -146,5 +149,42 @@ public class barResource {
 			}
 		}
 		return BAR;
+	}
+	
+	private String DELETE_BAR_QUERY = "delete from stings where stingid=? ";
+	 
+	@DELETE
+	@Path("/{barid}")
+	public void deleteBar(@PathParam("barid") String barid) {
+		//validarBar(BAR);
+		
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+	 
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(DELETE_BAR_QUERY);
+			stmt.setInt(1, Integer.valueOf(barid));
+	 
+			int rows = stmt.executeUpdate();
+			if (rows == 0)
+				throw new NotFoundException("There's no bar with id="
+						+ barid);
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
 	}
 }
