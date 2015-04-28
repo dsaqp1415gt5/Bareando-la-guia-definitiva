@@ -65,6 +65,45 @@ public class barResource {
 	private String INSERT_BAR_QUERY = "insert into bares (id, nombre, descripcion, nota) values (null, ?, ?, ?)";
 	private String GET_BAR_ID_QUERY = "select * from bares where id=?";
 
+	public bar getBarById(String id){
+		bar Bar = new bar();
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("No se ha podido conectar con la base de datos",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+		PreparedStatement stmt = null;
+		try{
+			stmt = conn.prepareStatement(GET_BAR_ID_QUERY);
+			stmt.setString(1, id);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Bar.setID(rs.getInt("id"));
+				Bar.setNombre(rs.getString("nombre"));
+				Bar.setDescripcion(rs.getString("descripcion"));
+				Bar.setNota(rs.getInt("nota"));
+			} else {
+				// Something has failed...
+			}
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+		return Bar;
+	}
+	
+	
 	@POST
 	@Consumes(MediaType.BAREANDO_BAR)
 	@Produces(MediaType.BAREANDO_BAR)
@@ -91,7 +130,7 @@ public class barResource {
 			if (rs.next()) {
 				int ID = rs.getInt(1); 
 
-				//BAR = getBarById(Integer.toString(ID));
+				BAR = getBarById(Integer.toString(ID));
 			} else {
 				// Something has failed...
 			}
