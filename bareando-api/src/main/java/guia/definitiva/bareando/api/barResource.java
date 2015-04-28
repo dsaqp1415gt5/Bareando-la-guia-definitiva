@@ -87,7 +87,7 @@ public class barResource {
 				Bar.setDescripcion(rs.getString("descripcion"));
 				Bar.setNota(rs.getInt("nota"));
 			} else {
-				// Something has failed...
+				// Something has failed... 
 			}
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
