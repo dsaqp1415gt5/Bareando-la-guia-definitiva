@@ -125,7 +125,7 @@ public class barResource {
 			stmt.setString(2, BAR.getDescripcion());
 			stmt.setInt(3, BAR.getNota());
 			stmt.executeUpdate();
-			
+			 
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
 				int ID = rs.getInt(1); 
