@@ -13,17 +13,26 @@ CREATE TABLE bares(
 );
 
 CREATE TABLE usuarios(
-    id          INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nick        VARCHAR(25) NOT NULL,
-    pass        VARCHAR(25) NOT NULL,
+    nick        VARCHAR(25) NOT NULL PRIMARY KEY,
+    nombre		VARCHAR(25) NOT NULL,
+    pass        VARCHAR(32) NOT NULL,
     mail        VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE comentarios(
     id          INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nick        VARCHAR(25) NOT NULL,
     id_bar      INTEGER,
-    id_user     INTEGER,
     mensaje     VARCHAR(250) NOT NULL,
     FOREIGN KEY (id_bar)  REFERENCES bares(id),
-    FOREIGN KEY (id_user) REFERENCES usuarios(id)
+    FOREIGN KEY (nick) REFERENCES usuarios(nick)
 );
+
+CREATE TABLE user_roles (
+    nick VARCHAR(25) NOT NULL,
+    rolename VARCHAR(20) NOT NULL,
+    FOREIGN KEY (nick)
+        REFERENCES usuarios (nick)
+        ON DELETE CASCADE,
+    PRIMARY KEY (nick, rolename)
+); 	

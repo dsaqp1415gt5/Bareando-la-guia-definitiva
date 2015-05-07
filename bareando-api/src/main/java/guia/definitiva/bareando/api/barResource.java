@@ -19,7 +19,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 
 @Path("/bares")
@@ -151,7 +153,7 @@ public class barResource {
 		return BAR;
 	}
 	
-	private String DELETE_BAR_QUERY = "delete from stings where stingid=? ";
+	private String DELETE_BAR_QUERY = "delete from bares where id=? ";
 	 
 	@DELETE
 	@Path("/{barid}")
@@ -169,7 +171,7 @@ public class barResource {
 		PreparedStatement stmt = null;
 		try {
 			stmt = conn.prepareStatement(DELETE_BAR_QUERY);
-			stmt.setInt(1, Integer.valueOf(barid));
+			stmt.setString(1, barid);
 	 
 			int rows = stmt.executeUpdate();
 			if (rows == 0)
@@ -187,4 +189,47 @@ public class barResource {
 			}
 		}
 	}
+	
+	@GET
+	@Path("{id}-{nombre}-{minNota}-{maxNota}")//bareando-api/stings/3-chita-8-9
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getBarByAll(@PathParam("id") String id,
+									 @PathParam("nombre") String nombre,
+									 @PathParam("minNota") String minNota,
+									 @PathParam("maxNota") String maxNota){
+		int primero = 0;
+		String QUERY = "select * from bares where ";
+		try{
+			int NOMBRE = Integer.parseInt(nombre);
+		} catch (NumberFormatException e) {
+			QUERY = QUERY.concat("nombre = '").concat(nombre).concat("' ");
+			primero++;
+		}
+		try{
+			int ID = Integer.parseInt(id);
+			int MaxNota = Integer.parseInt(maxNota);
+			int MinNota = Integer.parseInt(minNota);
+			if(ID > 0){
+				if(primero == 1)
+					QUERY = QUERY.concat("and id = '").concat(id).concat("' ");
+				else
+					QUERY = QUERY.concat("id = '").concat(id).concat("' ");
+				primero = 1;
+			}
+			if(MinNota < MaxNota && MinNota >= 0 && MaxNota <=  10){
+				if(primero == 1)
+					QUERY = QUERY.concat("and nota between ").concat(minNota).concat(" and ").concat(maxNota);
+				else
+					QUERY = QUERY.concat("nota between ").concat(minNota).concat(" and ").concat(maxNota);
+			}
+			System.out.println(QUERY);
+		} catch (NumberFormatException e) {
+			//no son numeros y deberian serlo
+		}
+		
+		return null;
+	}
+	
+	@Context
+	private SecurityContext security;
 }

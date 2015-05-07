@@ -4,4 +4,8 @@
 			maxActive="10" maxIdle="5" username="root" password="makitos666"
 			driverClassName="com.mysql.jdbc.Driver"
 			url="jdbc:mysql://localhost:3306/bareando?autoReconnect=true" />
+	<Realm className="org.apache.catalina.realm.DataSourceRealm"
+		dataSourceName="jdbc/bareando" localDataSource="true" digest="MD5"
+		userTable="usuarios" userNameCol="nick" userCredCol="pass"
+		userRoleTable="user_roles" roleNameCol="rolename" />
 </Context>
