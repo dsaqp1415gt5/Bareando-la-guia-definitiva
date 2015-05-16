@@ -192,14 +192,24 @@ public class barResource {
 
 	@GET
 	@Path("{id}-{nombre}-{minNota}-{maxNota}")
-	// bareando-api/stings/3-chita-8-9
+	// bareando-api/bares/3-chita-8-9
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getBarByAll(@PathParam("id") String id,
 			@PathParam("nombre") String nombre,
 			@PathParam("minNota") String minNota,
 			@PathParam("maxNota") String maxNota) {
 		int primero = 0;
+		barCollection bares = new barCollection();
 		String QUERY = "select * from bares where ";
+		
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+		
 		try {
 			int NOMBRE = Integer.parseInt(nombre);
 		} catch (NumberFormatException e) {
@@ -225,12 +235,37 @@ public class barResource {
 					QUERY = QUERY.concat("nota between ").concat(minNota)
 							.concat(" and ").concat(maxNota);
 			}
+			QUERY = QUERY.concat(";");
 			System.out.println(QUERY);
 		} catch (NumberFormatException e) {
 			// no son numeros y deberian serlo
 		}
+		
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(QUERY); 
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				bar Bar = new bar();
+				Bar.setDescripcion(rs.getString("descripcion"));
+				Bar.setID(rs.getInt("id"));
+				Bar.setNombre(rs.getString("nombre"));
+				Bar.setNota(rs.getInt("nota"));
+				bares.addBar(Bar);
+			} 
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
 
-		return null;
+		return bares;
 	}
 
 	@Context

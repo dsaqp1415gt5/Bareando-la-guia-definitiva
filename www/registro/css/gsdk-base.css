@@ -5,15 +5,15 @@
 }
 .form-control:-moz-placeholder{
    color: #DDDDDD;
-   opacity: 1;
-}
+   opacity: 1;  
+}  
 .form-control::-webkit-input-placeholder{
    color: #DDDDDD;
-   opacity: 1;
-}
+   opacity: 1; 
+} 
 .form-control:-ms-input-placeholder{
    color: #DDDDDD;
-   opacity: 1;
+   opacity: 1; 
 }
 /*     General overwrite     */
 a{
@@ -22,7 +22,7 @@ a{
 a:hover, a:focus {
     color: #109CFF;
 }
-a:focus, a:active,
+a:focus, a:active, 
 button::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
@@ -84,7 +84,7 @@ h1 .subtitle{
     font-family: 'Grand Hotel',cursive;
     line-height: 40px;
     margin: 15px 0 30px;
-
+    
 }
 
 
@@ -188,7 +188,7 @@ h1 .subtitle{
 .btn:active, .btn.active {
     background-image: none;
     box-shadow: none;
-
+    
 }
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
     opacity: 0.45;
@@ -343,7 +343,7 @@ h1 .subtitle{
     border-color: #05AE0E;
 }
 .has-error .form-control:focus{
-    border-color: #FF3B30;
+    border-color: #FF3B30; 
 }
 .input-group-addon {
     background-color: #FFFFFF;
@@ -524,7 +524,7 @@ h1 .subtitle{
 }
 .modal-header {
     border: 0 none;
-
+    
 }
 
 .tooltip {
@@ -642,7 +642,7 @@ h1 .subtitle{
     overflow: hidden;
     border-radius: 50%;
     border: 1px solid #333333;
-    width: 60px;
+    width: 60px; 
     float: left;
 }
 .logo-container .brand{
@@ -692,7 +692,7 @@ label{
 
 
 .wizard-container{
-
+   
     padding-top: 100px;
     z-index: 3;
 }
@@ -750,7 +750,7 @@ label{
 
 .wizard-card .picture-src{
     width: 100%;
-
+    
 }
 .wizard-card .tab-content{
     min-height: 340px;
@@ -795,7 +795,7 @@ label{
 .wizard-card > ul > li > a:hover, .wizard-card > ul > li > a:focus{
     background-color: #999999;
     cursor: default;
-}
+} 
 .wizard-card .btn{
     text-transform: uppercase;
 }
@@ -1020,7 +1020,7 @@ label{
         -o-transition: all 300ms cubic-bezier(0.34, 1.61, 0.7, 1);
         -ms-transition: all 300ms cubic-bezier(0.34, 1.61, 0.7, 1);
         transition: all 300ms cubic-bezier(0.34, 1.61, 0.7, 1);
-
+    
     }
     .navbar-nav > li.open > .dropdown-menu, .open .dropdown-menu{
         -webkit-transform-origin: 29px -50px;
