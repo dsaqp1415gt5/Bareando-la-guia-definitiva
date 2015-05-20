@@ -169,7 +169,7 @@ public class barResource {
 
 		return getBarByAll("0", "0", "0", "0", "0", "0");
 	}
-	
+
 	@GET
 	@Path("random")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
@@ -177,7 +177,7 @@ public class barResource {
 
 		return getBarByAll("0", "0", "0", "0", "R", "0");
 	}
-	
+
 	@GET
 	@Path("nombre:{nombre}")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
@@ -185,7 +185,7 @@ public class barResource {
 
 		return getBarByAll("0", nombre, "0", "0", "0", "0");
 	}
-	
+
 	@GET
 	@Path("genero:{genero}")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
@@ -222,7 +222,7 @@ public class barResource {
 			@PathParam("genero") String genero) {
 		int primero = 0;
 		Boolean GENERO = true;
-		Boolean OnlyOne = true;
+		Boolean OnlyOne = false;
 		barCollection bares = new barCollection();
 		String QUERY = "select * from bares ";
 
@@ -238,13 +238,11 @@ public class barResource {
 				QUERY = QUERY.concat("where nombre = '").concat(nombre)
 						.concat("' ");
 				primero++;
-				OnlyOne = false;
 			}
 		} else {
 			QUERY = QUERY.concat("where nombre = '").concat(nombre)
 					.concat("' ");
 			primero++;
-			OnlyOne = false;
 		}
 
 		Connection conn = null;
@@ -264,7 +262,6 @@ public class barResource {
 			else
 				QUERY = QUERY.concat("where id = '").concat(id).concat("' ");
 			primero = 1;
-			OnlyOne = false;
 		}
 		if (MinNota < MaxNota && MinNota >= 0 && MaxNota <= 10) {
 			if (primero == 1)
@@ -274,7 +271,6 @@ public class barResource {
 				QUERY = QUERY.concat("where nota between ").concat(minNota)
 						.concat(" and ").concat(maxNota);
 			primero = 1;
-			OnlyOne = false;
 		}
 		if (MinNota == MaxNota && MinNota > 0) {
 			if (primero == 1)
@@ -282,7 +278,6 @@ public class barResource {
 			else
 				QUERY = QUERY.concat("where nota=").concat(minNota);
 			primero = 1;
-			OnlyOne = false;
 		}
 		System.out.println(random);
 
@@ -294,13 +289,14 @@ public class barResource {
 				QUERY = QUERY.concat(" where genero = '").concat(genero)
 						.concat("' ");
 			primero = 1;
-			OnlyOne = false;
 		}
 		if (random.equals("R")) {
 			QUERY = QUERY.concat(" order by rand() ");
+			if (primero != 1)
+				OnlyOne = true;
 		}
-		
-		if(OnlyOne){
+
+		if (OnlyOne) {
 			QUERY = QUERY.concat(" LIMIT 1 ");
 		}
 		QUERY = QUERY.concat(";");
@@ -321,7 +317,7 @@ public class barResource {
 					Bar.setGenero(rs.getString("genero"));
 					bares.addBar(Bar);
 				}
-			}else{
+			} else {
 				return bares;
 			}
 		} catch (SQLException e) {
