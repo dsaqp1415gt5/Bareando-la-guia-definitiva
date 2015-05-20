@@ -3,8 +3,6 @@ package guia.definitiva.bareando.api;
 import guia.definitiva.bareando.model.bar;
 import guia.definitiva.bareando.model.barCollection;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Repeatable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
