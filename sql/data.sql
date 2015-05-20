@@ -1,6 +1,6 @@
-INSERT INTO bares       VALUES (null, "chitano", "un gran bar de monos", 6);
-INSERT INTO bares       VALUES (null, "tito roberts", "muy aburrido", 2);
-INSERT INTO bares       VALUES (null, "vinooooooos", "wiiiiiiiiiiiiiiiiiii", 9);
+INSERT INTO bares       VALUES (null, "chitano", "un gran bar de monos", 6, "cerveza");
+INSERT INTO bares       VALUES (null, "tito roberts", "muy aburrido", 2, "copas");
+INSERT INTO bares       VALUES (null, "vinooooooos", "wiiiiiiiiiiiiiiiiiii", 9, "vinos");
 
 INSERT INTO usuarios    VALUES ("makitos666", "marc", MD5("666makitos"), "makitos666@gmail.com");
 INSERT INTO usuarios    VALUES ("adricouci", "adri", MD5("makitos666"), "acouceiro@gmail.com");

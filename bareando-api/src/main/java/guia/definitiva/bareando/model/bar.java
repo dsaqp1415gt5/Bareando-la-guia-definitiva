@@ -5,7 +5,14 @@ public class bar {
 	private String nombre;
 	private String descripcion;
 	private int nota;
+	private String genero;
 	
+	public String getGenero() {
+		return genero;
+	}
+	public void setGenero(String genero) {
+		this.genero = genero;
+	}
 	public int getID() {
 		return ID;
 	}

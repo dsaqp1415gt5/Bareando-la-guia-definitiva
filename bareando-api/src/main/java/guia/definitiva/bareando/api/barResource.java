@@ -3,6 +3,8 @@ package guia.definitiva.bareando.api;
 import guia.definitiva.bareando.model.bar;
 import guia.definitiva.bareando.model.barCollection;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Repeatable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,46 +29,7 @@ import javax.ws.rs.core.SecurityContext;
 public class barResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
-	private String GET_BARES_QUERY = "select * from bares";
-
-	@GET
-	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
-	public barCollection getBares() {
-		barCollection bares = new barCollection();
-
-		Connection conn = null;
-		try {
-			conn = ds.getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		PreparedStatement stmt = null;
-
-		try {
-			stmt = conn.prepareStatement(GET_BARES_QUERY);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				bar Bar = new bar();
-				Bar.setID(rs.getInt("id"));
-				Bar.setNombre(rs.getString("nombre"));
-				Bar.setDescripcion(rs.getString("descripcion"));
-				Bar.setNota(rs.getInt("nota"));
-				bares.addBar(Bar);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-			}
-		}
-		return bares;
-	}
-
-	private String INSERT_BAR_QUERY = "insert into bares (id, nombre, descripcion, nota) values (null, ?, ?, ?)";
+	private String INSERT_BAR_QUERY = "insert into bares (id, nombre, descripcion, nota, genero) values (null, ?, ?, ?, ?)";
 	private String GET_BAR_ID_QUERY = "select * from bares where id=?";
 
 	public bar getBarById(String id) {
@@ -91,6 +54,7 @@ public class barResource {
 				Bar.setNombre(rs.getString("nombre"));
 				Bar.setDescripcion(rs.getString("descripcion"));
 				Bar.setNota(rs.getInt("nota"));
+				Bar.setGenero(rs.getString("genero"));
 			} else {
 				// Something has failed...
 			}
@@ -130,6 +94,7 @@ public class barResource {
 			stmt.setString(1, BAR.getNombre());
 			stmt.setString(2, BAR.getDescripcion());
 			stmt.setInt(3, BAR.getNota());
+			stmt.setString(4, BAR.getGenero());
 			stmt.executeUpdate();
 
 			ResultSet rs = stmt.getGeneratedKeys();
@@ -190,18 +155,100 @@ public class barResource {
 		}
 	}
 
+	private static boolean isNumeric(String cadena) {
+		try {
+			Integer.parseInt(cadena);
+			return true;
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+	}
+
 	@GET
-	@Path("{id}-{nombre}-{minNota}-{maxNota}")
-	// bareando-api/bares/3-chita-8-9
+	@Path("todos")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getTodos() {
+
+		return getBarByAll("0", "0", "0", "0", "0", "0");
+	}
+	
+	@GET
+	@Path("random")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getRandom() {
+
+		return getBarByAll("0", "0", "0", "0", "R", "0");
+	}
+	
+	@GET
+	@Path("nombre:{nombre}")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getByNombre(@PathParam("nombre") String nombre) {
+
+		return getBarByAll("0", nombre, "0", "0", "0", "0");
+	}
+	
+	@GET
+	@Path("genero:{genero}")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getByGenero(@PathParam("genero") String genero) {
+
+		return getBarByAll("0", "0", "0", "0", "0", genero);
+	}
+
+	@GET
+	@Path("nota:{nota}")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getByNota(@PathParam("nota") String nota) {
+
+		return getBarByAll("0", "0", nota, nota, "0", "0");
+	}
+
+	@GET
+	@Path("notas:{nota}&{nota2}")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getByNotas(@PathParam("nota") String nota,
+			@PathParam("nota2") String nota2) {
+
+		return getBarByAll("0", "0", nota, nota2, "0", "0");
+	}
+
+	@GET
+	@Path("{id}-{nombre}-{minNota}-{maxNota}-{random}-{genero}")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getBarByAll(@PathParam("id") String id,
 			@PathParam("nombre") String nombre,
 			@PathParam("minNota") String minNota,
-			@PathParam("maxNota") String maxNota) {
+			@PathParam("maxNota") String maxNota,
+			@PathParam("random") String random,
+			@PathParam("genero") String genero) {
 		int primero = 0;
+		Boolean GENERO = true;
+		Boolean OnlyOne = true;
 		barCollection bares = new barCollection();
-		String QUERY = "select * from bares where ";
-		
+		String QUERY = "select * from bares ";
+
+		if (!isNumeric(id) || !isNumeric(minNota) || !isNumeric(maxNota)) {
+			return bares;
+		}
+		if (isNumeric(genero)) {
+			GENERO = false;
+		}
+		if (isNumeric(nombre)) {
+			int NOMBRE = Integer.parseInt(nombre);
+			if (NOMBRE != 0) {
+				QUERY = QUERY.concat("where nombre = '").concat(nombre)
+						.concat("' ");
+				primero++;
+				OnlyOne = false;
+			}
+		} else {
+			QUERY = QUERY.concat("where nombre = '").concat(nombre)
+					.concat("' ");
+			primero++;
+			OnlyOne = false;
+		}
+
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -209,50 +256,76 @@ public class barResource {
 			throw new ServerErrorException("Could not connect to the database",
 					Response.Status.SERVICE_UNAVAILABLE);
 		}
-		
-		try {
-			int NOMBRE = Integer.parseInt(nombre);
-		} catch (NumberFormatException e) {
-			QUERY = QUERY.concat("nombre = '").concat(nombre).concat("' ");
-			primero++;
+
+		int ID = Integer.parseInt(id);
+		int MaxNota = Integer.parseInt(maxNota);
+		int MinNota = Integer.parseInt(minNota);
+		if (ID > 0) {
+			if (primero == 1)
+				QUERY = QUERY.concat("and id = '").concat(id).concat("' ");
+			else
+				QUERY = QUERY.concat("where id = '").concat(id).concat("' ");
+			primero = 1;
+			OnlyOne = false;
 		}
-		try {
-			int ID = Integer.parseInt(id);
-			int MaxNota = Integer.parseInt(maxNota);
-			int MinNota = Integer.parseInt(minNota);
-			if (ID > 0) {
-				if (primero == 1)
-					QUERY = QUERY.concat("and id = '").concat(id).concat("' ");
-				else
-					QUERY = QUERY.concat("id = '").concat(id).concat("' ");
-				primero = 1;
-			}
-			if (MinNota < MaxNota && MinNota >= 0 && MaxNota <= 10) {
-				if (primero == 1)
-					QUERY = QUERY.concat("and nota between ").concat(minNota)
-							.concat(" and ").concat(maxNota);
-				else
-					QUERY = QUERY.concat("nota between ").concat(minNota)
-							.concat(" and ").concat(maxNota);
-			}
-			QUERY = QUERY.concat(";");
-			System.out.println(QUERY);
-		} catch (NumberFormatException e) {
-			// no son numeros y deberian serlo
+		if (MinNota < MaxNota && MinNota >= 0 && MaxNota <= 10) {
+			if (primero == 1)
+				QUERY = QUERY.concat("and nota between ").concat(minNota)
+						.concat(" and ").concat(maxNota);
+			else
+				QUERY = QUERY.concat("where nota between ").concat(minNota)
+						.concat(" and ").concat(maxNota);
+			primero = 1;
+			OnlyOne = false;
+		}
+		if (MinNota == MaxNota && MinNota > 0) {
+			if (primero == 1)
+				QUERY = QUERY.concat("and nota=").concat(minNota);
+			else
+				QUERY = QUERY.concat("where nota=").concat(minNota);
+			primero = 1;
+			OnlyOne = false;
+		}
+		System.out.println(random);
+
+		if (GENERO) {
+			if (primero == 1)
+				QUERY = QUERY.concat(" and genero = '").concat(genero)
+						.concat("' ");
+			else
+				QUERY = QUERY.concat(" where genero = '").concat(genero)
+						.concat("' ");
+			primero = 1;
+			OnlyOne = false;
+		}
+		if (random.equals("R")) {
+			QUERY = QUERY.concat(" order by rand() ");
 		}
 		
+		if(OnlyOne){
+			QUERY = QUERY.concat(" LIMIT 1 ");
+		}
+		QUERY = QUERY.concat(";");
+		System.out.println(QUERY);
+
 		PreparedStatement stmt = null;
 		try {
-			stmt = conn.prepareStatement(QUERY); 
+			stmt = conn.prepareStatement(QUERY);
 			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				bar Bar = new bar();
-				Bar.setDescripcion(rs.getString("descripcion"));
-				Bar.setID(rs.getInt("id"));
-				Bar.setNombre(rs.getString("nombre"));
-				Bar.setNota(rs.getInt("nota"));
-				bares.addBar(Bar);
-			} 
+			if (rs.next()) {
+				rs.previous();
+				while (rs.next()) {
+					bar Bar = new bar();
+					Bar.setDescripcion(rs.getString("descripcion"));
+					Bar.setID(rs.getInt("id"));
+					Bar.setNombre(rs.getString("nombre"));
+					Bar.setNota(rs.getInt("nota"));
+					Bar.setGenero(rs.getString("genero"));
+					bares.addBar(Bar);
+				}
+			}else{
+				return bares;
+			}
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);

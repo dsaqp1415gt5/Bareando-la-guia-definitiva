@@ -9,7 +9,8 @@ CREATE TABLE bares(
     id          INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre      VARCHAR(100) NOT NULL,
     descripcion VARCHAR(250) NOT NULL,
-    nota        INTEGER NOT NULL
+    nota        INTEGER NOT NULL,
+    genero		VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE usuarios(
