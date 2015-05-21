@@ -1,8 +1,7 @@
 var API_BASE_URL = "http://tgrupo5.dsa:8080/bareando-api";
 
 $(document).ready(function(){    
-    var x = Math.floor((Math.random() * 3) + 1);
-	var url = API_BASE_URL + '/bares/' + x + '-0-0-0';
+	var url = API_BASE_URL + '/bares/0-0-0-0-R-0';
 	getBar(url);
     
 $('#loginModal').on('shown.bs.modal', function() {
@@ -22,19 +21,6 @@ $('#loginModal').on('shown.bs.modal', function() {
 function PrinterBarPrincipal(objeto){
 	this.bar = objeto;
 	var instance = this;
-
-	/*this.buildLinks = function(header){
-		if (header != null ) {
-			this.links = weblinking.parseHeader(header);
-		} else {
-			this.links = weblinking.parseHeader('');
-		}
-	}
-
-	this.getLink = function(rel){
-                return this.links.getLinkValuesByRel(rel);
-	}
-    */
     
     this.printBar = function(){
 		$.each(this.bar, function(i, v) {

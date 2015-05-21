@@ -25,8 +25,8 @@ CREATE TABLE comentarios(
     nick        VARCHAR(25) NOT NULL,
     id_bar      INTEGER,
     mensaje     VARCHAR(250) NOT NULL,
-    FOREIGN KEY (id_bar)  REFERENCES bares(id),
-    FOREIGN KEY (nick) REFERENCES usuarios(nick)
+    FOREIGN KEY (id_bar)  REFERENCES bares(id) ON DELETE CASCADE,
+    FOREIGN KEY (nick) REFERENCES usuarios(nick) ON DELETE CASCADE
 );
 
 CREATE TABLE user_roles (

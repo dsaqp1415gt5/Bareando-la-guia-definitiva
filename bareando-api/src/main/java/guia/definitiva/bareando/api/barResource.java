@@ -141,6 +141,7 @@ public class barResource {
 			if (rows == 0)
 				throw new NotFoundException("There's no bar with id=" + barid);
 		} catch (SQLException e) {
+			System.out.println(e);
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
 		} finally {
@@ -163,11 +164,25 @@ public class barResource {
 	}
 
 	@GET
+	@Path("desc")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getTodosDesc() {
+		return getBarByAll("0", "0", "0", "0", "0", "0", "D");
+	}
+	
+	@GET
+	@Path("asc")
+	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
+	public barCollection getTodosAsc() {
+		return getBarByAll("0", "0", "0", "0", "0", "0", "A");
+	}
+	
+	@GET
 	@Path("todos")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getTodos() {
 
-		return getBarByAll("0", "0", "0", "0", "0", "0");
+		return getBarByAll("0", "0", "0", "0", "0", "0", "0");
 	}
 
 	@GET
@@ -175,7 +190,7 @@ public class barResource {
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getRandom() {
 
-		return getBarByAll("0", "0", "0", "0", "R", "0");
+		return getBarByAll("0", "0", "0", "0", "R", "0", "0");
 	}
 
 	@GET
@@ -183,7 +198,7 @@ public class barResource {
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getByNombre(@PathParam("nombre") String nombre) {
 
-		return getBarByAll("0", nombre, "0", "0", "0", "0");
+		return getBarByAll("0", nombre, "0", "0", "0", "0", "0");
 	}
 
 	@GET
@@ -191,7 +206,7 @@ public class barResource {
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getByGenero(@PathParam("genero") String genero) {
 
-		return getBarByAll("0", "0", "0", "0", "0", genero);
+		return getBarByAll("0", "0", "0", "0", "0", genero, "0");
 	}
 
 	@GET
@@ -199,7 +214,7 @@ public class barResource {
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getByNota(@PathParam("nota") String nota) {
 
-		return getBarByAll("0", "0", nota, nota, "0", "0");
+		return getBarByAll("0", "0", nota, nota, "0", "0", "0");
 	}
 
 	@GET
@@ -208,18 +223,19 @@ public class barResource {
 	public barCollection getByNotas(@PathParam("nota") String nota,
 			@PathParam("nota2") String nota2) {
 
-		return getBarByAll("0", "0", nota, nota2, "0", "0");
+		return getBarByAll("0", "0", nota, nota2, "0", "0", "0");
 	}
 
 	@GET
-	@Path("{id}-{nombre}-{minNota}-{maxNota}-{random}-{genero}")
+	@Path("{id}-{nombre}-{minNota}-{maxNota}-{random}-{genero}-{orden}")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getBarByAll(@PathParam("id") String id,
 			@PathParam("nombre") String nombre,
 			@PathParam("minNota") String minNota,
 			@PathParam("maxNota") String maxNota,
 			@PathParam("random") String random,
-			@PathParam("genero") String genero) {
+			@PathParam("genero") String genero,
+			@PathParam("orden") String orden) {
 		int primero = 0;
 		Boolean GENERO = true;
 		Boolean OnlyOne = false;
@@ -294,6 +310,13 @@ public class barResource {
 			QUERY = QUERY.concat(" order by rand() ");
 			if (primero != 1)
 				OnlyOne = true;
+		}
+		if(orden.equals("A")){
+			QUERY = QUERY.concat(" order by nota asc ");
+		}else if(orden.equals("D")){
+			QUERY = QUERY.concat(" order by nota desc ");
+		}else{
+			// do nothing
 		}
 
 		if (OnlyOne) {
