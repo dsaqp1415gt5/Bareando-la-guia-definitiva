@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://tgrupo5.dsa:8080/bareando-api";
+var API_BASE_URL = "http://147.83.7.200:8080/bareando-api";
 
 $(document).ready(function(){    
     var url = API_BASE_URL + '/bares/0-0-0-0-R-0-0';
