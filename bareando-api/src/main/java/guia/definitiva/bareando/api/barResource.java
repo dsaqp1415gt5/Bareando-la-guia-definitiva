@@ -197,12 +197,14 @@ public class barResource {
 			} catch (SQLException e) {
 			}
 		}
+		try{
 		paginas = resultado / perPage;
 
-		double pags = Math.ceil((double) resultado / (double) perPage);// redondear
-																		// hacia
-																		// arriba
+		double pags = Math.ceil((double) resultado / (double) perPage);
 		paginas = (int) pags;
+		}catch(UnsupportedOperationException e){
+			paginas = 0;
+		}
 		return paginas;
 	}
 
