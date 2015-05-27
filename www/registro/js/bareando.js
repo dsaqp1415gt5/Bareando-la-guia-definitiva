@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://tgrupo5.dsa:8080/bareando-api";
+var API_BASE_URL = "http://147.83.7.200:8080/bareando-api";
 var incorrectNameInput = true;
 var incorrectPassInput = true;
 
@@ -6,7 +6,6 @@ $(document).ready(function(){
     var url = API_BASE_URL + '/usuarios/';
 
     $("#fin").click(function(e) {
-        console.log("click");
         registrar(url);
     });
 
@@ -87,32 +86,38 @@ function registrar(url) {
     if(incorrectNameInput == false && incorrectPassInput == false){  
         var ok = comprobarCampos();
         if(ok == true){
+
             usuario = {
                 "nick" : $('#inputNick').val(),
                 "nombre" : $('#inputNombre').val(),
                 "pass" : $('#inputPass').val(),
                 "mail" : $('#inputMail').val()
             }
-            console.log(usuario);
+
+            var data = JSON.stringify(usuario);
+
+            $.ajax({
+                url : url,
+                type : 'POST',
+                crossDomain : true,
+                contentType : "application/vnd.bareando.api.user+json",
+                dataType : 'json',
+                data : data,
+            }).done(function(data, status, jqxhr) {
+                $(".wizard-container").html("Registrado correctamente, espere un momento...");
+                //se puede mejorar
+                setTimeout(function(){
+                    $(location).attr('href', "../index.html");
+                }, 2000);
+            }).fail(function() {
+                $(".wizard-container").effect("shake", {times:4}, 1000 );
+            });
+
         }else{
             $(".wizard-container").effect("shake", {times:4}, 1000 );
         }
     }else{
         $(".wizard-container").effect( "shake", {times:4}, 1000 );
     }
-    /*	
-	$.ajax({
-		url : url,
-		type : 'GET',
-		crossDomain : true,
-		dataType : 'json',
-	}).done(function(data, status, jqxhr) {
-        var response = data;
-        console.log(response);
-        var imprimirBar = new PrinterBarPrincipal(response);
-		imprimirBar.printBar();
-	}).fail(function(jqXHR, textStatus) {
-		console.log(textStatus);
-	});*/
 
 }

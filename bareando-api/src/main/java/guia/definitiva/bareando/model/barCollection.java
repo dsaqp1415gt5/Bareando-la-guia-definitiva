@@ -24,6 +24,15 @@ public class barCollection {
 	}
 
 	private List<bar> bares;
+	private int paginas;
+
+	public int getPaginas() {
+		return paginas;
+	}
+
+	public void setPaginas(int paginas) {
+		this.paginas = paginas;
+	}
 
 	public barCollection() {
 		super();

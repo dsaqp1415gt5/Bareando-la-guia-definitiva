@@ -12,7 +12,7 @@ import org.glassfish.jersey.linking.InjectLink.Style;
 import org.glassfish.jersey.linking.InjectLinks;
 
 public class bar {
-	@InjectLinks({ @InjectLink(value = "bares/{id}-0-0-0-0-0-0", style = Style.ABSOLUTE, rel = "get Bar", title = "Bar", type = MediaType.BAREANDO_BAR, method = "getBar", bindings = @Binding(name = "id", value = "${instance.ID}")) })
+	@InjectLinks({ @InjectLink(value = "bares/{id}-0-0-0-0-0-0-0-0", style = Style.ABSOLUTE, rel = "get Bar", title = "Bar", type = MediaType.BAREANDO_BAR, method = "getBar", bindings = @Binding(name = "id", value = "${instance.ID}")) })
 	private List<Link> links;
 	private int ID;
 	private String nombre;
