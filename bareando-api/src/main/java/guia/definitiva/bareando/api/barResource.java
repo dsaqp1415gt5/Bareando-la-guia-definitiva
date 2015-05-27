@@ -365,12 +365,12 @@ public class barResource {
 
 		int porpagina = Integer.parseInt(perpage);
 		int pagina = Integer.parseInt(page);
-		int pagTotales = paginasTotales(porpagina);
 
 		if (OnlyOne) {// OnlyOne + paginacion = desastre!! --> solucion: si
 						// random no se pagina, else!
 			QUERY = QUERY.concat(" LIMIT 1");
 		} else if (porpagina != 0) {
+			int pagTotales = paginasTotales(porpagina);
 			int min = pagina * porpagina;
 			bares.setPaginas(pagTotales);
 			QUERY = QUERY.concat(" LIMIT ").concat(String.valueOf(min))

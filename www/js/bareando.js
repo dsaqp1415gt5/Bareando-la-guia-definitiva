@@ -1,7 +1,7 @@
 var API_BASE_URL = "http://147.83.7.200:8080/bareando-api";
 
 $(document).ready(function(){    
-    var url = API_BASE_URL + '/bares/0-0-0-0-R-0-0';
+    var url = API_BASE_URL + '/bares/0-0-0-0-R-0-0-0-0';
     getBar(url);
 
     $('#loginModal').on('shown.bs.modal', function() {
