@@ -60,8 +60,29 @@ $(document).ready(function(){
 });
 
 function printarPaginasEnPaginacion(paginas, genero){
-    console.log(paginas);
     console.log(genero);
+    var pagina;
+    $(".pagination").html("");
+    for (i = 0; i < paginas; i++) { 
+        pagina = i+1;
+        $(".pagination").append("<li><a onClick=\"Paginar('" + genero + "', '" + i + "')\">" + pagina + "</a></li>");
+    }
+}
+
+function Paginar(genero, pag){
+    var url = API_BASE_URL + '/bares/0-0-0-0-0-' + genero + '-0-3-' + pag;//3-0 --> 3 por pagina la pagina 0
+    $.ajax({
+        url : url,
+        type : 'GET',
+        crossDomain : true,
+        dataType : 'json',
+    }).done(function(data, status, jqxhr) {
+        var response = data;
+        var imprimirBares = new PrinterBares(response);
+        imprimirBares.printBares();
+    }).fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+    });
 }
 
 function getBarByGenero(genero){
@@ -87,6 +108,7 @@ function getBarByGenero(genero){
 function PrinterBares(objeto){
     this.bar = objeto;
     var instance = this;
+    $("#pepe").html("");
 
     this.printBares = function(){
         var stringHtml = "";
