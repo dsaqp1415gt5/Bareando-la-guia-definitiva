@@ -19,7 +19,7 @@ $(document).ready(function(){
     $('#tapas').click(function(){
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.php?link=tapas');
+            $("#cuerpo").load('bares.html #lista');
             getBarByGenero("tapas");
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
@@ -27,7 +27,7 @@ $(document).ready(function(){
     $('#cervezas').click(function(){
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.php?link=tapas');
+            $("#cuerpo").load('bares.html #lista');
             getBarByGenero("cervezas");
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
@@ -35,7 +35,7 @@ $(document).ready(function(){
     $('#vinos').click(function(){
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.php?link=tapas');
+            $("#cuerpo").load('bares.html #lista');
             getBarByGenero("vinos");
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
@@ -43,7 +43,7 @@ $(document).ready(function(){
     $('#cocktails').click(function(){
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.php?link=tapas');
+            $("#cuerpo").load('bares.html #lista');
             getBarByGenero("cocktails");
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
@@ -51,7 +51,7 @@ $(document).ready(function(){
     $('.inicio').click(function(){
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.php?link=home');
+            $("#cuerpo").load('bares.html #home');
             getBar(url);
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
@@ -59,8 +59,13 @@ $(document).ready(function(){
 
 });
 
+function printarPaginasEnPaginacion(paginas, genero){
+    console.log(paginas);
+    console.log(genero);
+}
+
 function getBarByGenero(genero){
-    var url = API_BASE_URL + '/bares/genero:' + genero;
+    var url = API_BASE_URL + '/bares/0-0-0-0-0-' + genero + '-0-3-0';//3-0 --> 3 por pagina la pagina 0
     $.ajax({
         url : url,
         type : 'GET',
@@ -68,7 +73,7 @@ function getBarByGenero(genero){
         dataType : 'json',
     }).done(function(data, status, jqxhr) {
         var response = data;
-        console.log(response);
+        printarPaginasEnPaginacion(data.paginas, genero);
         var imprimirBares = new PrinterBares(response);
         imprimirBares.printBares();
     }).fail(function(jqXHR, textStatus) {

@@ -165,10 +165,11 @@ public class barResource {
 
 	private String COUNT_ROWS = "select COUNT(*) from bares;";
 
-	private int paginasTotales(int perPage) {
+	private int paginasTotales(int perPage, String query) {
 		int resultado = 0;
 		int paginas = 0;
 		Connection conn = null;
+		ResultSet rs;
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
@@ -178,8 +179,9 @@ public class barResource {
 		}
 		PreparedStatement stmt = null;
 		try {
-			stmt = conn.prepareStatement(COUNT_ROWS);
-			ResultSet rs = stmt.executeQuery();
+
+			stmt = conn.prepareStatement(query);
+			rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				resultado = rs.getInt(1);
@@ -197,12 +199,12 @@ public class barResource {
 			} catch (SQLException e) {
 			}
 		}
-		try{
-		paginas = resultado / perPage;
+		try {
+			paginas = resultado / perPage;
 
-		double pags = Math.ceil((double) resultado / (double) perPage);
-		paginas = (int) pags;
-		}catch(UnsupportedOperationException e){
+			double pags = Math.ceil((double) resultado / (double) perPage);
+			paginas = (int) pags;
+		} catch (UnsupportedOperationException e) {
 			paginas = 0;
 		}
 		return paginas;
@@ -269,6 +271,11 @@ public class barResource {
 			@PathParam("nota2") String nota2) {
 
 		return getBarByAll("0", "0", nota, nota2, "0", "0", "0", "0", "0");
+	}
+
+	public static String reemplazar(String cadena, String busqueda,
+			String reemplazo) {
+		return cadena.replaceAll(busqueda, reemplazo);
 	}
 
 	@GET
@@ -367,12 +374,15 @@ public class barResource {
 
 		int porpagina = Integer.parseInt(perpage);
 		int pagina = Integer.parseInt(page);
-
+		int pagTotales;
+		String QUERY_PAG = reemplazar(QUERY, "\\*", "COUNT(*)");
+		QUERY_PAG.concat(";");
 		if (OnlyOne) {// OnlyOne + paginacion = desastre!! --> solucion: si
 						// random no se pagina, else!
 			QUERY = QUERY.concat(" LIMIT 1");
-		} else if (porpagina != 0) {
-			int pagTotales = paginasTotales(porpagina);
+		} else if (porpagina != 0) {// esto tiene que ser lo ultimo que se haga,
+									// paginar!
+			pagTotales = paginasTotales(porpagina, QUERY_PAG);
 			int min = pagina * porpagina;
 			bares.setPaginas(pagTotales);
 			QUERY = QUERY.concat(" LIMIT ").concat(String.valueOf(min))
