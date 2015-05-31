@@ -4,4 +4,5 @@ public interface MediaType {
 	public final static String BAREANDO_BAR = "application/vnd.bareando.api.bar+json";
 	public final static String BAREANDO_BAR_COLLECTION = "application/vnd.bareando.api.bar.collection+json";
 	public final static String BAREANDO_USER = "application/vnd.bareando.api.user+json";
+	public final static String BAREANDO_COMENTARIO_COLLECTION = "application/vnd.bareando.api.comentario.collection+json";
 }

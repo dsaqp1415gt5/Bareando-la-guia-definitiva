@@ -304,13 +304,13 @@ public class barResource {
 		if (isNumeric(nombre)) {
 			int NOMBRE = Integer.parseInt(nombre);
 			if (NOMBRE != 0) {
-				QUERY = QUERY.concat("where nombre = '").concat(nombre)
-						.concat("' ");
+				QUERY = QUERY.concat("where nombre like '%").concat(nombre)
+						.concat("%' ");
 				primero++;
 			}
 		} else {
-			QUERY = QUERY.concat("where nombre = '").concat(nombre)
-					.concat("' ");
+			QUERY = QUERY.concat("where nombre like '%").concat(nombre)
+					.concat("%' ");
 			primero++;
 		}
 

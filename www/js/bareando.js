@@ -1,132 +1,131 @@
-var API_BASE_URL = "http://147.83.7.200:8080/bareando-api";
+var apiUrl = new uriObject();
+apiUrl.updateUrl();
 
 $(document).ready(function(){    
-    var url = API_BASE_URL + '/bares/0-0-0-0-R-0-0-0-0';
-    getBar(url);
+    apiUrl.random = "R";
+    apiUrl.updateUrl();
+    printBarPrincipal(apiUrl.makeGetRequest());
+    apiUrl.restartUrlParameters();
 
     $('#loginModal').on('shown.bs.modal', function() {
-        var initModalHeight = $('#modal-dialog').outerHeight(); //give an id to .mobile-dialog
+        var initModalHeight = $('#modal-dialog').outerHeight(); 
         var userScreenHeight = $(document).outerHeight();
         if (initModalHeight > userScreenHeight) {
-            $('#modal-dialog').css('overflow', 'auto'); //set to overflow if no fit
+            $('#modal-dialog').css('overflow', 'auto'); 
         } else {
-            $('#modal-dialog').css('margin-top', 
-                                   (userScreenHeight / 2) - (initModalHeight)); //center it if it does fit
-            console.log(initModalHeight);
+            $('#modal-dialog').css('margin-top', (userScreenHeight / 2) - (initModalHeight)); 
         }
     });
 
-    $('#tapas').click(function(){
+    $('#tapas, #cervezas, #vinos, #cocktails').click(function(event){
+        var genero = event.target.id;
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.html #lista');
-            getBarByGenero("tapas");
+            $("#cuerpo").load('bares.html #lista', function(){
+                apiUrl.restartUrlParameters();
+                apiUrl.genero = genero;
+                apiUrl.perpage = 3;
+                apiUrl.updateUrl();
+                PrinterBares(apiUrl.makeGetRequest());
+                printarPaginasEnPaginacion(apiUrl.paginas);
+                startSearchOptions();
+            });
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
     });
-    $('#cervezas').click(function(){
+    $('#buscar').click(function(){
+        var nombre = $('#busqueda').val();
+        if (nombre == "")
+            nombre = "0";
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.html #lista');
-            getBarByGenero("cervezas");
-        });
-        $(".se-pre-con").delay(700).fadeOut("slow");
-    });
-    $('#vinos').click(function(){
-        $(".se-pre-con").fadeIn("fast", function(){
-            $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.html #lista');
-            getBarByGenero("vinos");
-        });
-        $(".se-pre-con").delay(700).fadeOut("slow");
-    });
-    $('#cocktails').click(function(){
-        $(".se-pre-con").fadeIn("fast", function(){
-            $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.html #lista');
-            getBarByGenero("cocktails");
+            $("#cuerpo").load('bares.html #lista', function(){
+                apiUrl.restartUrlParameters();
+                apiUrl.nombre = nombre;
+                apiUrl.perpage = 3;
+                apiUrl.updateUrl();
+                PrinterBares(apiUrl.makeGetRequest());
+                printarPaginasEnPaginacion(apiUrl.paginas);
+                startSearchOptions();
+            });
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
     });
     $('.inicio').click(function(){
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.html #home');
-            getBar(url);
+            $("#cuerpo").load('bares.html #home', function(){
+                apiUrl.restartUrlParameters();
+                apiUrl.random = "R";
+                apiUrl.updateUrl();
+                printBarPrincipal(apiUrl.makeGetRequest());
+            });
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
     });
 
 });
 
-function printarPaginasEnPaginacion(paginas, genero){
-    console.log(genero);
+function startSearchOptions(){
+    $("#range").ionRangeSlider({
+        hide_min_max: true,
+        keyboard: true,
+        min: 0,
+        max: 10 ,
+        from: 0,
+        to: 10,
+        type: 'int',
+        step: 1,
+        prefix: "Nota:",
+        grid: true,
+        grid_num: 2.5,
+        onFinish: function (data) {
+            apiUrl.minNota = $("#range").data("ionRangeSlider").old_from; 
+            apiUrl.maxNota = $("#range").data("ionRangeSlider").old_to; 
+            apiUrl.updateUrl();
+            PrinterBares(apiUrl.makeGetRequest());
+        },
+    });
+}
+
+function printarPaginasEnPaginacion(paginas){
+    //tipo 1 --> genero
+    //tipo 2 --> nombre
     var pagina;
     $(".pagination").html("");
     for (i = 0; i < paginas; i++) { 
         pagina = i+1;
-        $(".pagination").append("<li><a onClick=\"Paginar('" + genero + "', '" + i + "')\">" + pagina + "</a></li>");
+        $(".pagination").append("<li><a onClick=\"page('" + i + "')\">" + pagina + "</a></li>");
     }
 }
-
-function Paginar(genero, pag){
-    var url = API_BASE_URL + '/bares/0-0-0-0-0-' + genero + '-0-3-' + pag;//3-0 --> 3 por pagina la pagina 0
-    $.ajax({
-        url : url,
-        type : 'GET',
-        crossDomain : true,
-        dataType : 'json',
-    }).done(function(data, status, jqxhr) {
-        var response = data;
-        var imprimirBares = new PrinterBares(response);
-        imprimirBares.printBares();
-    }).fail(function(jqXHR, textStatus) {
-        console.log(textStatus);
-    });
+function page(i){
+    apiUrl.page = i;
+    apiUrl.updateUrl();
+    PrinterBares(apiUrl.makeGetRequest());
 }
 
-function getBarByGenero(genero){
-    var url = API_BASE_URL + '/bares/0-0-0-0-0-' + genero + '-0-3-0';//3-0 --> 3 por pagina la pagina 0
-    $.ajax({
-        url : url,
-        type : 'GET',
-        crossDomain : true,
-        dataType : 'json',
-    }).done(function(data, status, jqxhr) {
-        var response = data;
-        printarPaginasEnPaginacion(data.paginas, genero);
-        var imprimirBares = new PrinterBares(response);
-        imprimirBares.printBares();
-    }).fail(function(jqXHR, textStatus) {
-        console.log(textStatus);
-    });
-}
-
-/*
-<div class="row"><div class="col-md-7"><img class="img-responsive" src="http://placehold.it/700x300" alt=""></div><div class="col-md-5">      <h3>tiulo bar</h3><h4>Nota: nota</h4><p>Descripcion</p><a class="btn btn-primary" href="#">Mas detalles...<span class="glyphicon glyphicon-chevron-right"></span></a></div></div><hr>
-*/
 function PrinterBares(objeto){
     this.bar = objeto;
     var instance = this;
+    apiUrl.paginas = this.bar.paginas;
     $("#pepe").html("");
-
-    this.printBares = function(){
-        var stringHtml = "";
-        $.each(this.bar, function(i, v) {
-            this.bares = v;
-            $.each(this.bares, function(i, v) {
-                var appender;
-                var BAR = v;
-                var nombre = BAR.nombre;
-                if(nombre != undefined){
-                    var descr = BAR.descripcion;
-                    var nota = BAR.nota;
-                    appender = stringHtml.concat("<div class='row'><div class='col-md-7'><img class='img-responsive' src='http://placehold.it/700x300' alt=''></div><div class='col-md-5'>      <h3>", nombre, "</h3><h4>Nota: ", nota, "</h4><p>", descr, "</p><a class='btn btn-primary' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a></div></div><hr>");
-                    $("#pepe").append(appender);
-                }
-            });      
-        });
-    }
+    var stringHtml = "";
+    $.each(this.bar, function(i, v) {
+        this.bares = v;
+        if(v.length == 0)
+            $("#pepe").html("La busqueda no ha dado resultados");
+        $.each(this.bares, function(i, v) {
+            var appender;
+            var BAR = v;
+            var nombre = BAR.nombre;
+            if(nombre != undefined){
+                var descr = BAR.descripcion;
+                var nota = BAR.nota;
+                appender = stringHtml.concat("<div class='row'><div class='col-md-7'><img class='img-responsive' src='http://placehold.it/700x300' alt=''></div><div class='col-md-5'>      <h3>", nombre, "</h3><h4>Nota: ", nota, "</h4><p>", descr, "</p><a class='btn btn-primary' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a></div></div><hr>");
+                $("#pepe").append(appender);
+            }
+        });      
+    });
 }
 
 function PrinterBarPrincipal(objeto){
@@ -147,18 +146,20 @@ function PrinterBarPrincipal(objeto){
 
 }
 
-function getBar(url) {
-    $.ajax({
-        url : url,
-        type : 'GET',
-        crossDomain : true,
-        dataType : 'json',
-    }).done(function(data, status, jqxhr) {
-        var response = data;
-        console.log(response);
-        var imprimirBar = new PrinterBarPrincipal(response);
-        imprimirBar.printBar();
-    }).fail(function(jqXHR, textStatus) {
-        console.log(textStatus);
+function printBarPrincipal(objeto){
+    this.bar = objeto;
+    var instance = this;
+
+    $.each(this.bar, function(i, v) {
+        if(i == "bares"){
+            var BAR = v;
+            var nombre = BAR[0].nombre;
+            var descr = BAR[0].descripcion;
+            var nota = BAR[0].nota;
+            console.log($(".titulo").html());
+            $(".titulo").html(nombre);
+            $(".descripcion").html(descr);
+            $(".nota").html(nota);
+        }
     });
 }

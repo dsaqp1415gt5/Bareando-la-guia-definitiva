@@ -2,23 +2,29 @@
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <link rel="shortcut icon" href="/img/icono.ico" type="image/x-icon" />
         <meta charset="utf-8">
         <title>Bareando</title>
         <meta name="generator" content="Bootply" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/modernizr.js"></script>
+        <script src="js/core.js"></script>
         <script src="js/bareando.js"></script>
-        <link rel="shortcut icon" href="/img/icono.ico" type="image/x-icon" />
+        <script src="ex/js/ion.rangeSlider.js"></script>
+
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <!--[if lt IE 9]>
 <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
         <link href="css/styles.css" rel="stylesheet">
-        <link href="css/startboot.css" rel="stylesheet">
+        <link href="ex/css/ion.rangeSlider.css" rel="stylesheet">
+        <link href="ex/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
     </head>
+
     <script>
         $(window).load(function() {
             $(".se-pre-con").delay(1500).fadeOut("slow");
@@ -26,7 +32,7 @@
     </script>
     <body>
         <div class="se-pre-con"></div>
-        
+
         <nav class="navbar navbar-inverse" role="navigation">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -53,9 +59,9 @@ otro elemento que se pueda ocultar al minimizar la barra -->
                     <li>
                         <form class="navbar-form navbar-left" role="search">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Buscar">
+                                <input id="busqueda" type="text" class="form-control" placeholder="Buscar">
                             </div>
-                            <button type="submit" class="btn btn-default">Enviar</button>
+                            <button id="buscar" type="submit" class="btn btn-default">Enviar</button>
                         </form>
                     </li>
                     <li>
