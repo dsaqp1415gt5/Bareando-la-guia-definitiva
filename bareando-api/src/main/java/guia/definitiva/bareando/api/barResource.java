@@ -377,11 +377,9 @@ public class barResource {
 		int pagTotales;
 		String QUERY_PAG = reemplazar(QUERY, "\\*", "COUNT(*)");
 		QUERY_PAG.concat(";");
-		if (OnlyOne) {// OnlyOne + paginacion = desastre!! --> solucion: si
-						// random no se pagina, else!
+		if (OnlyOne) {
 			QUERY = QUERY.concat(" LIMIT 1");
-		} else if (porpagina != 0) {// esto tiene que ser lo ultimo que se haga,
-									// paginar!
+		} else if (porpagina != 0) {
 			pagTotales = paginasTotales(porpagina, QUERY_PAG);
 			int min = pagina * porpagina;
 			bares.setPaginas(pagTotales);
