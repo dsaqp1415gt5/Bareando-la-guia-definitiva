@@ -27,6 +27,7 @@ public class comentarioResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
 	private String GET_COMENTARIOS = "select * from comentarios where id_bar=? LIMIT ?, 10;";
+	private String GET_COMENTARIOS_NO_PAG = "select * from comentarios where id_bar=?";
 	private String GET_COMENTARIOS_COUNT = "select count(*) from comentarios where id_bar=?;";
 
 	public int countComentarios(int id) {
@@ -73,6 +74,12 @@ public class comentarioResource {
 	}
 
 	@GET
+	@Path("/{id}")
+	public comentarioCollection getComentariosNoPag(@PathParam("id") int id){
+		return getComentariosByBar(id, 9999);
+	}
+	
+	@GET
 	@Path("/{id}-{pagina}")
 	public comentarioCollection getComentariosByBar(@PathParam("id") int id,
 			@PathParam("pagina") int pag) {
@@ -88,9 +95,14 @@ public class comentarioResource {
 
 		PreparedStatement stmt = null;
 		try {
-			stmt = conn.prepareStatement(GET_COMENTARIOS);
-			stmt.setInt(1, id);
-			stmt.setInt(2, min);
+			if (pag == 9999) {
+				stmt = conn.prepareStatement(GET_COMENTARIOS_NO_PAG);
+				stmt.setInt(1, id);
+			} else {
+				stmt = conn.prepareStatement(GET_COMENTARIOS);
+				stmt.setInt(1, id);
+				stmt.setInt(2, min);
+			}
 			System.out.println(stmt);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {

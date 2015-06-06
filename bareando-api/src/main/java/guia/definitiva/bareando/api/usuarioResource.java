@@ -27,7 +27,7 @@ public class usuarioResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
 	private String GET_USUARIOS_QUERY = "insert into usuarios values (?, ?, MD5(?), ?);";
-
+	
 	@POST
 	@Produces(MediaType.BAREANDO_USER)
 	@Consumes(MediaType.BAREANDO_USER)

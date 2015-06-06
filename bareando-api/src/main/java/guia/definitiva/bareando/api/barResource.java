@@ -228,7 +228,6 @@ public class barResource {
 	@Path("todos")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getTodos() {
-
 		return getBarByAll("0", "0", "0", "0", "0", "0", "0", "0", "0");
 	}
 
@@ -236,7 +235,6 @@ public class barResource {
 	@Path("random")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getRandom() {
-
 		return getBarByAll("0", "0", "0", "0", "R", "0", "0", "0", "0");
 	}
 
@@ -244,7 +242,6 @@ public class barResource {
 	@Path("nombre:{nombre}")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getByNombre(@PathParam("nombre") String nombre) {
-
 		return getBarByAll("0", nombre, "0", "0", "0", "0", "0", "0", "0");
 	}
 
@@ -252,7 +249,6 @@ public class barResource {
 	@Path("genero:{genero}")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getByGenero(@PathParam("genero") String genero) {
-
 		return getBarByAll("0", "0", "0", "0", "0", genero, "0", "0", "0");
 	}
 
@@ -260,7 +256,6 @@ public class barResource {
 	@Path("nota:{nota}")
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getByNota(@PathParam("nota") String nota) {
-
 		return getBarByAll("0", "0", nota, nota, "0", "0", "0", "0", "0");
 	}
 
@@ -269,7 +264,6 @@ public class barResource {
 	@Produces(MediaType.BAREANDO_BAR_COLLECTION)
 	public barCollection getByNotas(@PathParam("nota") String nota,
 			@PathParam("nota2") String nota2) {
-
 		return getBarByAll("0", "0", nota, nota2, "0", "0", "0", "0", "0");
 	}
 
