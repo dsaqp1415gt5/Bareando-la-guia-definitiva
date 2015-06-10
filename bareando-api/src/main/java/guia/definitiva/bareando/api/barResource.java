@@ -3,16 +3,23 @@ package guia.definitiva.bareando.api;
 import guia.definitiva.bareando.model.bar;
 import guia.definitiva.bareando.model.barCollection;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.util.Locale;
 
 import javax.sql.DataSource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 @Path("/bares")
@@ -415,6 +423,26 @@ public class barResource {
 		}
 
 		return bares;
+	}
+	
+	@GET
+	@Path("img-{id}")
+	@Produces("image/png")
+	public Response get16x16PNG(@PathParam("id") String id) {
+	    File repositoryFile = new File("/var/www/tgrupo5.dsa/public_html/img/bares/" + id + ".jpg");
+	    return returnFile(repositoryFile);
+	}
+	
+	public static Response returnFile(File file) {
+	    if (!file.exists()) {
+	        return Response.status(Status.NOT_FOUND).build();
+	    }
+	    try {
+	        Date fileDate = new Date(file.lastModified());
+	        return Response.ok(new FileInputStream(file)).lastModified(fileDate).build();
+	    } catch (FileNotFoundException e) {
+	        return Response.status(Status.NOT_FOUND).build();
+	    }
 	}
 
 	@Context
