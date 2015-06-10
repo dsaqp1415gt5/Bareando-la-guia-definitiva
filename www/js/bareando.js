@@ -19,6 +19,7 @@ $(document).ready(function(){
 
     $('#tapas, #cervezas, #vinos, #cocktails').click(function(event){
         var genero = event.target.id;
+
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
             $("#cuerpo").load('bares.html #lista', function(){
@@ -29,6 +30,8 @@ $(document).ready(function(){
                 PrinterBares(apiUrl.makeGetRequest());
                 printarPaginasEnPaginacion(apiUrl.paginas);
                 startSearchOptions();
+                var check = '#' + genero.slice(0, -1);
+                $(check).prop( "checked", true );
             });
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
