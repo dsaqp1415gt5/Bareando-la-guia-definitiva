@@ -405,6 +405,8 @@ public class barResource {
 					Bar.setNombre(rs.getString("nombre"));
 					Bar.setNota(rs.getInt("nota"));
 					Bar.setGenero(rs.getString("genero"));
+					Bar.setLon(rs.getString("lon"));
+					Bar.setLat(rs.getString("lat"));
 					bares.addBar(Bar);
 				}
 			} else {
@@ -444,6 +446,8 @@ public class barResource {
 	        return Response.status(Status.NOT_FOUND).build();
 	    }
 	}
+	
+	
 
 	@Context
 	private SecurityContext security;

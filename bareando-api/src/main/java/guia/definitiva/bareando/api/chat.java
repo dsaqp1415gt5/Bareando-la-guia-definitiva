@@ -42,10 +42,11 @@ public class chat {
 
 	@GET
 	@Path("/{msj}-{usr}")
-	public void postMensajes(@PathParam("msj") String mensaje,
+	public String postMensajes(@PathParam("msj") String mensaje,
 			@PathParam("usr") String usuario) {
 		map.put(usuario, mensaje);
 		maps.put(usuario, 1);
 		// ola = 1;
+		return "ok";
 	}
 }

@@ -2,6 +2,7 @@ package guia.definitiva.bareando.model;
 
 import guia.definitiva.bareando.api.MediaType;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.ws.rs.core.Link;
@@ -19,6 +20,23 @@ public class bar {
 	private String descripcion;
 	private int nota;
 	private String genero;
+	private String lat;
+	private String lon;
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public String getLon() {
+		return lon;
+	}
+
+	public void setLon(String lon) {
+		this.lon = lon;
+	}
 
 	public String getGenero() {
 		return genero;

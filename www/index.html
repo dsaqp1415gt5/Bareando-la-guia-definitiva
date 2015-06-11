@@ -12,9 +12,11 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/modernizr.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js"></script>
         <script src="js/core.js"></script>
         <script src="js/bareando.js"></script>
         <script src="ex/js/ion.rangeSlider.js"></script>
+        <script src="js/bootstrap-rta.min.js"></script>
 
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <!--[if lt IE 9]>
@@ -23,6 +25,7 @@
         <link href="css/styles.css" rel="stylesheet">
         <link href="ex/css/ion.rangeSlider.css" rel="stylesheet">
         <link href="ex/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+        <link href="css/bootstrap-rta-1.0.0.min.css" rel="stylesheet">
     </head>
 
     <script>
@@ -64,12 +67,12 @@ otro elemento que se pueda ocultar al minimizar la barra -->
                             <button id="buscar" type="submit" class="btn btn-default">Enviar</button>
                         </form>
                     </li>
-                    <li>
+                    <li id="loged">
                         <button type="button" id="botonlogin" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">Login</button>
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <button type="button" class="btn btn-default navbar-btn"><a href="registro/">Registro</a></button>
+                        <button id="logout" type="button" class="btn btn-default navbar-btn"><a href="registro/">Registro</a></button>
                     </li>
                     <li></li>
                 </ul>
@@ -92,7 +95,7 @@ otro elemento que se pueda ocultar al minimizar la barra -->
                     <div class="col-lg-12">
                         <div class="well trescolumnas">
                             <div class="cero"><h3 class="titulo">El bar del tito Roberts</h3></div>
-                            <div class="uno"><img class="img-responsive" src="img/bar.jpg"></div>
+                            <div class="uno"><img id="photo" class="img-responsive" src="img/bar.jpg"></div>
                             <div class="dos">
                                 <ul class="descripcion">
                                     <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
@@ -127,40 +130,45 @@ otro elemento que se pueda ocultar al minimizar la barra -->
                             </div>
                         </div>
                     </a>
-                    <a href="paginacion/">
+                    <a id="foto" href="#">
                         <div class="col-md-4">
                             <div class="well logo_cont">
                                 <img class="img-responsive logo" src="img/wine.png">
                                 <p class="logo text">Vinotecas</p>
+                                <form id="data">
+                                    <input name="file" type="file" />
+                                    <input type="submit" value="Submit">
+                                </form>
+
                             </div>
                         </div>
                     </a>
                 </div>
             </div>
             <hr>
-            <div id="loginModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog" id="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button id="cerrar" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h1 class="text-center">Login</h1>
+        </div>
+        <div id="loginModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" id="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="cerrar" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h1 class="text-center">Login</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form col-md-12 center-block">
+                            <div class="form-group">
+                                <input id="nick" type="text" class="form-control input-lg" placeholder="Nick">
+                            </div>
+                            <div class="form-group">
+                                <input id="pass" type="password" class="form-control input-lg" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <button id="entrar" class="btn btn-primary btn-lg btn-block">Sign In</button>
+                                <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <form class="form col-md-12 center-block">
-                                <div class="form-group">
-                                    <input type="text" class="form-control input-lg" placeholder="Email">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control input-lg" placeholder="Password">
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary btn-lg btn-block">Sign In</button>
-                                    <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer" style="border:none;">
-                        </div>
+                    </div>
+                    <div class="modal-footer" style="border:none;">
                     </div>
                 </div>
             </div>

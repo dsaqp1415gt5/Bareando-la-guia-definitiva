@@ -1,5 +1,5 @@
-var BASE_URL = "http://147.83.7.200:8080/bareando-api";
-//var BASE_URL = "http://localhost:8080/bareando-api";
+//var BASE_URL = "http://147.83.7.200:8080/bareando-api";
+var BASE_URL = "http://localhost:8080/bareando-api";
 
 function uriObject (){
     this.url = BASE_URL;
@@ -47,6 +47,23 @@ function makeRequest(type, url){
     $.ajax({
         url : url,
         type : type,
+        async: false,  
+        crossDomain : true,
+        dataType : 'json',
+    }).done(function(data, status, jqxhr) {
+        respuesta = data;
+    }).fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+        respuesta = textStatus;
+    });
+    return respuesta;
+}
+
+function getComentarios(id){
+    var respuesta;
+    var urlcmt = BASE_URL + "/comentarios/" + id;
+    $.ajax({
+        url : urlcmt,
         async: false,  
         crossDomain : true,
         dataType : 'json',
