@@ -351,15 +351,29 @@ public class barResource {
 			primero = 1;
 		}
 		System.out.println(random);
-
 		if (GENERO) {
-			if (primero == 1)
-				QUERY = QUERY.concat(" and genero = '").concat(genero)
-						.concat("' ");
-			else
-				QUERY = QUERY.concat(" where genero = '").concat(genero)
-						.concat("' ");
-			primero = 1;
+			String[] parts = genero.split(",");
+			if (parts.length == 1 && !isNumeric(genero)) {
+				if (primero == 1)
+					QUERY = QUERY.concat(" and genero = '").concat(genero)
+							.concat("' ");
+				else
+					QUERY = QUERY.concat(" where genero = '").concat(genero)
+							.concat("' ");
+				primero = 1;
+			} else if (parts.length == 4 && (!parts[0].equals("0") || !parts[1].equals("0") || !parts[2].equals("0") || !parts[3].equals("0"))) {
+				if (primero == 1)
+					QUERY = QUERY.concat(" and genero in ('")
+					.concat(parts[0]).concat("','").concat(parts[1])
+					.concat("','").concat(parts[2]).concat("','")
+					.concat(parts[3]).concat("') ");
+				else
+					QUERY = QUERY.concat(" where genero in ('")
+							.concat(parts[0]).concat("','").concat(parts[1])
+							.concat("','").concat(parts[2]).concat("','")
+							.concat(parts[3]).concat("') ");
+				primero = 1;
+			}
 		}
 		if (random.equals("R")) {
 			QUERY = QUERY.concat(" order by rand() ");
@@ -426,28 +440,39 @@ public class barResource {
 
 		return bares;
 	}
-	
+
 	@GET
 	@Path("img-{id}")
 	@Produces("image/png")
-	public Response get16x16PNG(@PathParam("id") String id) {
-	    File repositoryFile = new File("/var/www/tgrupo5.dsa/public_html/img/bares/" + id + ".jpg");
-	    return returnFile(repositoryFile);
+	public Response getBarImg(@PathParam("id") String id) {
+		File repositoryFile = new File(
+				"/var/www/tgrupo5.dsa/public_html/img/bares/" + id + ".jpg");
+		return returnFile(repositoryFile);
 	}
 	
+	@GET
+	@Path("usr-{nick}")
+	@Produces("image/png")
+	public Response getUserImg(@PathParam("nick") String nick) {
+		File repositoryFile = new File(
+				"/var/www/tgrupo5.dsa/public_html/img/bares/" + nick + ".png");
+		return returnFile(repositoryFile);
+	}
+
 	public static Response returnFile(File file) {
-	    if (!file.exists()) {
-	        return Response.status(Status.NOT_FOUND).build();
-	    }
-	    try {
-	        Date fileDate = new Date(file.lastModified());
-	        return Response.ok(new FileInputStream(file)).lastModified(fileDate).build();
-	    } catch (FileNotFoundException e) {
-	        return Response.status(Status.NOT_FOUND).build();
-	    }
+		if (!file.exists()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		try {
+			Date fileDate = new Date(file.lastModified());
+			return Response.ok(new FileInputStream(file))
+					.lastModified(fileDate).build();
+		} catch (FileNotFoundException e) {
+			File repositoryFile = new File(
+					"/var/www/tgrupo5.dsa/public_html/img/user.jpg");
+			return returnFile(repositoryFile);
+		}
 	}
-	
-	
 
 	@Context
 	private SecurityContext security;

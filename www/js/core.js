@@ -8,7 +8,10 @@ function uriObject (){
     this.minNota = 0;
     this.maxNota = 0;
     this.random = 0;
-    this.genero = 0;
+    this.genero1 = 0;
+    this.genero2 = 0;
+    this.genero3 = 0;
+    this.genero4 = 0;
     this.orden = 0;
     this.perpage = 0;
     this.page = 0;
@@ -22,7 +25,10 @@ function uriObject (){
         this.minNota = 0;
         this.maxNota = 0;
         this.random = 0;
-        this.genero = 0;
+        this.genero1 = 0;
+        this.genero2 = 0;
+        this.genero3 = 0;
+        this.genero4 = 0;
         this.orden = 0;
         this.perpage = 0;
         this.page = 0;
@@ -32,7 +38,8 @@ function uriObject (){
     }
 
     this.updateUrl = function(){
-        this.url = BASE_URL + '/bares/' + this.id + '-' + this.nombre + '-' + this.minNota + '-' + this.maxNota + '-' + this.random + '-' + this.genero + '-' + this.orden + '-' + this.perpage + '-' + this.page;
+        this.url = BASE_URL + '/bares/' + this.id + '-' + this.nombre + '-' + this.minNota + '-' + this.maxNota + '-' + this.random + '-' + this.genero1 +
+        ',' + this.genero2 + ',' + this.genero3 + ',' + this.genero4 + '-' + this.orden + '-' + this.perpage + '-' + this.page;
         return this.url;
     };
 

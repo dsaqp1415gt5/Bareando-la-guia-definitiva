@@ -41,15 +41,17 @@ $(document).ready(function(){
         event.preventDefault();
         var formData = new FormData($(this)[0]);
         $.ajax({
-            url: 'http://localhost:8080/bareando-api/foto/upload-makitos',
+            url: 'http://tgrupo5.dsa:8080/bareando-api/foto/upload-makitos666',
             type: 'POST',
             data: formData,
             async: false,
             cache: false,
             contentType: false,
             processData: false,
-            success: function (returndata) {
-                alert(returndata);
+            success: function (data, status, jqxhr) {
+                console.log(data);
+                console.log(status);
+                console.log(jqxhr);
             }
         });
         return false;
@@ -61,7 +63,15 @@ $(document).ready(function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
             $("#cuerpo").load('bares.html #lista', function(){
                 apiUrl.restartUrlParameters();
-                apiUrl.genero = genero;
+                if(genero == "tapas"){
+                    apiUrl.genero1 = "tapas";
+                }else if(genero == "vinos"){
+                    apiUrl.genero2 = "vinos";
+                }else if(genero == "cervezas"){
+                    apiUrl.genero3 = "cervezas";
+                }else if(genero == "cocktails"){
+                    apiUrl.genero4 = "cocktails";
+                } 
                 apiUrl.perpage = 3;
                 apiUrl.updateUrl();
                 PrinterBares(apiUrl.makeGetRequest());
@@ -74,7 +84,7 @@ $(document).ready(function(){
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
     });
-    
+
     $('#entrar').click(function(){
         var login ={
             "nick":$("#nick").val(),
@@ -191,8 +201,18 @@ function printarBarDescripcion(bar){
     console.log(bar.bares[0].ID);
     $("#fotoBar").attr("src", "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + bar.bares[0].ID +".jpg");
     $(".titulo").html(bar.bares[0].nombre);
-    $("#cosas").html(bar.bares[0].descripcion + "<br /><div><h3 style='display:inline'>Nota:    </h3><h2 style='display:inline' class='nota'>"+bar.bares[0].nota+"</h2></div>");
+    $("#cosas").html(bar.bares[0].descripcion + "<br /><div style='float: none;margin-left: auto;margin-right: auto;' class='col-lg-4'><h3 style='display:inline'>Nota:    </h3><h2 style='display:inline' class='nota'>"+bar.bares[0].nota+"</h2></div><div>Danos tu opinion: <div id='dm2' class='divValoracion'><div class='estrella_1 estrellasValoracion'></div><div class='estrella_2 estrellasValoracion'></div><div class='estrella_3 estrellasValoracion'></div><div class='estrella_4 estrellasValoracion'></div><div class='estrella_5 estrellasValoracion'></div></div></div>");
     printComentarios(bar.bares[0].ID);
+    $('.estrellasValoracion').hover(
+        function() {
+            $(this).prevAll().andSelf().addClass('estrellaVotar');
+            $(this).nextAll().removeClass('estrellaValoracion'); 
+        },
+        function() {
+            $(this).prevAll().andSelf().removeClass('estrellaVotar');
+            indicarVotos($(this).parent());
+        }
+    );
 }
 function initialize() {
     var mapCanvas = document.getElementById('mapa');
@@ -204,6 +224,21 @@ function initialize() {
     var map = new google.maps.Map(mapCanvas, mapOptions);
 }
 
+function borrarComentario(idcmt, barId){
+    $.ajax({
+        url: 'http://localhost:8080/bareando-api/comentarios/'+idcmt,
+        type: 'DELETE',
+        async: false,
+        cache: false,
+        processData: false,
+        success: function (data, status, jqxhr) {
+            console.log(data);
+            console.log(status);
+            console.log(jqxhr);
+            printComentarios(barId);
+        }
+    });
+}
 function printComentarios(barId){
     /*<div class='media'><a class='pull-left' href='#'><img class='media-object' src='img/user.jpg' alt='Media Object'></a><div class='media-body'><h4 class='media-heading'>username</h4>comentario</div></div>*/
     var response = getComentarios(barId);
@@ -211,9 +246,12 @@ function printComentarios(barId){
     $.each(response.comentarios, function(i, v) {
         //console.log(v);
         var comentario = v;
-        htmlcmt+="<div class='media'><a class='pull-left' href='#'><img class='media-object' src='img/user.jpg' alt='Media Object'></a><div class='media-body'><h4 class='media-heading'>";
+        htmlcmt+="<div class='media'><a class='pull-left' href='#'><img class='media-object' src='img/bares/" + v.nick + ".png' onerror=\"this.src='img/user.jpg'\" alt='Media Object' width='84px'></a><div class='media-body'><h4 class='media-heading'>";
         htmlcmt+=v.nick;
-        htmlcmt+="</h4>";
+        if(v.nick == nick)
+            htmlcmt+="</h4><div style='float:right' onclick='borrarComentario(" + comentario.id + "," + barId + ")' data-toggle='tooltip' title='Borrar Comentario'><img src='img/x.png'></div>";
+        else
+            htmlcmt+="</h4></div>";
         htmlcmt+=v.mensaje;
         htmlcmt+="</div></div>";
     });
@@ -222,9 +260,34 @@ function printComentarios(barId){
     }
     $("#comentarios").html(htmlcmt);
     $.rta();
-    
+    $('[data-toggle="tooltip"]').tooltip();   
     $('#enviarComentario').click(function(){
-        console.log("pepepepepe");
+        var html = $("#ta_sample-mirror").html();
+        var data = {
+            id_bar : barId,
+            mensaje : html,
+            nick : nick
+        };
+
+        var coment = JSON.stringify(data);
+        /*"id_bar": 9,
+            "mensaje": "poooor queeeeeeeee????",
+            "nick": "adricouci"*/
+        $.ajax({
+            url: 'http://localhost:8080/bareando-api/comentarios',
+            type: 'POST',
+            data: coment,
+            async: false,
+            cache: false,
+            contentType: "application/vnd.bareando.api.comentario.collection+json",
+            processData: false,
+            success: function (data, status, jqxhr) {
+                console.log(data);
+                console.log(status);
+                console.log(jqxhr);
+                printComentarios(barId);
+            }
+        });
     });
 }
 function startSearchOptions(){
@@ -248,7 +311,31 @@ function startSearchOptions(){
         },
     });
     $('#tapa, #cerveza, #vino, #cocktail').click(function(event){
-        //event.target.id;
+        genero = event.target.id;
+        if(genero == "tapa"){
+            if(apiUrl.genero1 == "tapas")
+                apiUrl.genero1 = 0;
+            else
+                apiUrl.genero1 = "tapas";
+        }else if(genero == "vino"){
+            if(apiUrl.genero2 == "vinos")
+                apiUrl.genero2 = 0;
+            else
+                apiUrl.genero2 = "vinos";
+        }else if(genero == "cerveza"){
+            if(apiUrl.genero3 == "cervezas")
+                apiUrl.genero3 = 0;
+            else
+                apiUrl.genero3 = "cervezas";
+        }else if(genero == "cocktail"){
+            if(apiUrl.genero4 == "cocktails")
+                apiUrl.genero4 = 0;
+            else
+                apiUrl.genero4 = "cocktails";
+        } 
+        apiUrl.updateUrl();
+        PrinterBares(apiUrl.makeGetRequest());
+        printarPaginasEnPaginacion(apiUrl.paginas);
     });
 }
 

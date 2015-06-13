@@ -75,6 +75,7 @@ function readURL(input) {
 
         reader.onload = function (e) {
             $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+            $('#wizardPicturePrevieww').attr('src', e.target.result);
         }
         reader.readAsDataURL(input.files[0]);
     }

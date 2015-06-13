@@ -62,6 +62,7 @@ public class usuarioResource {
 					nuevo.setNick(rs.getString("nick"));
 					nuevo.setNombre(rs.getString("nombre"));
 					nuevo.setMail(rs.getString("mail"));
+					nuevo.setLoginSuccessful(true);
 					System.out.println(nuevo);
 
 				} else {

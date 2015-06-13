@@ -26,8 +26,8 @@ import javax.ws.rs.core.Response;
 public class comentarioResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
-	private String GET_COMENTARIOS = "select * from comentarios where id_bar=? LIMIT ?, 10;";
-	private String GET_COMENTARIOS_NO_PAG = "select * from comentarios where id_bar=?";
+	private String GET_COMENTARIOS = "select * from comentarios where id_bar=? order by id desc LIMIT ?, 10;";
+	private String GET_COMENTARIOS_NO_PAG = "select * from comentarios where id_bar=? order by id desc";
 	private String GET_COMENTARIOS_COUNT = "select count(*) from comentarios where id_bar=?;";
 
 	public int countComentarios(int id) {

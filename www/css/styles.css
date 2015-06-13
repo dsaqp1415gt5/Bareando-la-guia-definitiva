@@ -235,3 +235,56 @@
 .navbar-brand{
     padding: 8px 15px;
 }
+
+.estrellasValoracion {
+    background: url('../img/estrellaVacia.png') no-repeat;
+    float:      left;
+    height:     24px;
+    padding:    2px;
+    width:      24px;
+}
+
+.divValoracion {
+    overflow:   visible;
+    padding:    10px;
+    position:   relative;
+    width:      100%;
+    height:     24px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+/* las imágenes que se van a usar cuando se obtengan los votos */
+.estrellaValoracion {
+    background: url('../img/estrellaLlena.png') no-repeat;
+}
+
+/* y cuando se ponga el mouse por encima */
+.estrellaVotar {
+    background: url('../img/estrellaHover.png') no-repeat;
+}
+
+.votosTotales {
+    background: #eaeaea;
+    top: 58px;
+    left: 0;
+    padding: 5px;
+    position:   absolute;  
+} 
+
+#nebaris{
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    margin-top: 120px;
+    font-family: helvetica;
+}
+
+#nebaris a{
+    color:rgb(178, 255, 178);
+}
+
+#nebaris a:hover{
+    color:white;
+}
