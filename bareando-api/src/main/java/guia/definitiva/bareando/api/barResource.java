@@ -461,7 +461,9 @@ public class barResource {
 
 	public static Response returnFile(File file) {
 		if (!file.exists()) {
-			return Response.status(Status.NOT_FOUND).build();
+			File repositoryFile = new File(
+					"/var/www/tgrupo5.dsa/public_html/img/user.jpg");
+			return returnFile(repositoryFile);
 		}
 		try {
 			Date fileDate = new Date(file.lastModified());
