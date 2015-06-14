@@ -1,5 +1,5 @@
-//var BASE_URL = "http://147.83.7.200:8080/bareando-api";
-var BASE_URL = "http://localhost:8080/bareando-api";
+var BASE_URL = "http://147.83.7.200:8080/bareando-api";
+//var BASE_URL = "http://localhost:8080/bareando-api";
 
 function uriObject (){
     this.url = BASE_URL;
