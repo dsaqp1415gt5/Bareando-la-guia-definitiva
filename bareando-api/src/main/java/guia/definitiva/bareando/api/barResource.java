@@ -35,7 +35,7 @@ import javax.ws.rs.core.SecurityContext;
 public class barResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
-	private String INSERT_BAR_QUERY = "insert into bares (id, nombre, descripcion, nota, genero) values (null, ?, ?, ?, ?)";
+	private String INSERT_BAR_QUERY = "insert into bares (id, nombre, descripcion, nota, genero, lat, lon) values (null, ?, ?, ?, ?, ?, ?)";
 	private String GET_BAR_ID_QUERY = "select * from bares where id=?";
 
 	public bar getBarById(String id) {
@@ -101,6 +101,8 @@ public class barResource {
 			stmt.setString(2, BAR.getDescripcion());
 			stmt.setInt(3, BAR.getNota());
 			stmt.setString(4, BAR.getGenero());
+			stmt.setString(5, BAR.getLat());
+			stmt.setString(6, BAR.getLon());
 			stmt.executeUpdate();
 
 			ResultSet rs = stmt.getGeneratedKeys();

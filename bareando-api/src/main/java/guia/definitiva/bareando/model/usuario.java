@@ -6,6 +6,7 @@ public class usuario {
 	private String nick;
 	private String pass;
 	private String mail;
+	private String role;
 	private boolean loginSuccessful;
 	
 	public boolean isLoginSuccessful() {
@@ -16,6 +17,12 @@ public class usuario {
 	}
 	public String getNombre() {
 		return nombre;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	public void setNombre(String nombre) {
 		this.nombre = nombre;

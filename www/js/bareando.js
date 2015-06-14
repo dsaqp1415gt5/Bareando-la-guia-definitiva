@@ -5,14 +5,34 @@ apiUrl.updateUrl();
 var BASE_URL = "http://localhost:8080/bareando-api";
 var nick = $.cookie('nick');
 var pass = $.cookie('pass');
+var rol =  $.cookie('rol');
+var nombre = $.cookie('nombre');
+var mail = $.cookie('mail');
 
+
+window.setInterval(function(){
+    if(nick != undefined)
+    {
+        console.log("getting chat of " + nick);
+        getChat();
+    }
+}, 1000);
 $(document).ready(function(){
     if(nick != undefined){
         console.log("hola " + nick);
         $("#loged").html("");
         $("#logout").html("<a href='#'>Logout</a>");
+        $("#perfil").show();
+        if(rol == "admin"){
+            $("#addBar").show();
+        }
+
+        $.ajaxSetup({
+            headers: { 'Authorization': "Basic " + btoa(nick + ':' + pass)}
+        });
     }else{
         console.log("login");
+
     }
     apiUrl.random = "R";
     apiUrl.updateUrl();
@@ -23,6 +43,9 @@ $(document).ready(function(){
         if(nick != undefined){
             $.removeCookie('nick');
             $.removeCookie('pass');
+            $.removeCookie('rol');
+            $.removeCookie('nombre');
+            $.removeCookie('mail');
             location.reload();
         }
     });
@@ -40,8 +63,9 @@ $(document).ready(function(){
     $("form#data").submit(function(event){
         event.preventDefault();
         var formData = new FormData($(this)[0]);
+        console.log(formData);
         $.ajax({
-            url: 'http://tgrupo5.dsa:8080/bareando-api/foto/upload-makitos666',
+            url: 'http://tgrupo5.dsa:8080/bareando-api/foto/upload-pepepe',
             type: 'POST',
             data: formData,
             async: false,
@@ -56,6 +80,7 @@ $(document).ready(function(){
         });
         return false;
     });
+
 
     $('#tapas, #cervezas, #vinos, #cocktails').click(function(event){
         var genero = event.target.id;
@@ -104,6 +129,9 @@ $(document).ready(function(){
             if(data.loginSuccessful == true){
                 $.cookie('nick', $("#nick").val());
                 $.cookie('pass', $("#pass").val());
+                $.cookie('rol', data.role);
+                $.cookie('nombre', data.nombre);
+                $.cookie('mail', data.mail);
                 location.reload();
             }else{
                 console.log("error login");
@@ -133,20 +161,54 @@ $(document).ready(function(){
         $(".se-pre-con").delay(700).fadeOut("slow");
     });
 
-    $('a').click(function(event){
-        var idbar = event.target.id;
-        console.log(idbar);
-        /*$(".se-pre-con").fadeIn("fast", function(){
+    $('#addBar').click(function(){
+        $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
-            $("#cuerpo").load('bares.html #descrip', function(){
-                oneBar.restartUrlParameters();
-                oneBar.id = idBar;
-                oneBar.updateUrl();
-                printarBarDescripcion(oneBar.makeGetRequest());
+            $("#cuerpo").load('bares.html #anadirBar', function(){
+                $("form#barData").submit(function(event){
+                    event.preventDefault();
+                    var formData = new FormData($(this)[0]);
+                    var data = {
+                        descripcion : $("#descripcion").val(),
+                        nombre : $("#nombre").val(),
+                        nota : $("#nota").val(),
+                        genero : $("#genero option:selected").text(),
+                        lat : $("#lat").val(),
+                        lon : $("#lon").val()
+                    };
+                    var jdata = JSON.stringify(data);
+                    console.log(jdata);
+                    $.ajax({
+                        url: BASE_URL + '/bares',
+                        type: 'POST',
+                        data: jdata,
+                        async: false,
+                        cache: false,
+                        contentType: "application/vnd.bareando.api.bar+json",
+                        processData: false,
+                    }).done(function(data, status, jqxhr) {
+                        console.log(BASE_URL + '/foto/upload-'+ data.ID);
+                        $.ajax({
+                            url: BASE_URL + '/foto/upload-'+ data.ID,
+                            type: 'POST',
+                            data: formData,
+                            async: false,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data, status, jqxhr) {
+                            location.reload();
+                        }).fail(function(jqXHR, textStatus) {
+                            console.log(textStatus);
+                            console.log(jqXHR);
+                        });
+                    });
+                });
             });
         });
-        $(".se-pre-con").delay(700).fadeOut("slow");*/
+        $(".se-pre-con").delay(700).fadeOut("slow");
     });
+
     $('.inicio').click(function(){
         $(".se-pre-con").fadeIn("fast", function(){
             $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
@@ -176,8 +238,25 @@ $(document).ready(function(){
             });
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
+    });//perfilBtn
+    $('#perfilBtn').click(function(event){
+        var idBar = event.target.id;
+        console.log(idBar);
+        $(".se-pre-con").fadeIn("fast", function(){
+            $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
+            $("#cuerpo").load('bares.html #pagPerfil', function(response, status, xhr){
+                $("#tituloUsuario").html(nick);
+                $("#nombreUsuario").html(nombre);
+                $("#mailUsuario").html(mail);
+                $("#nickUsuario").html(nick);
+                $("#rolUsuario").html(rol);
+                $("#fotoUsuario").attr("src", "img/bares/"+nick+".png");
+            });
+        });
+        $(".se-pre-con").delay(700).fadeOut("slow");
     });
-    $('.descr').click(function(event){
+    
+     $('.descr').click(function(event){
         var idBar = event.target.id;
         console.log(idBar);
         $(".se-pre-con").fadeIn("fast", function(){
@@ -197,11 +276,72 @@ $(document).ready(function(){
     });
 
 });
+
+function getChat(){
+    var respuesta;
+    $.ajax({
+        url : BASE_URL + '/chat/recibir/'+nick,
+        type : 'GET',
+        async: false,  
+        crossDomain : true,
+        dataType : 'json',
+    }).done(function(data, status, jqxhr) {
+        if(data != undefined)
+        {
+            usuario = data.mensajes[0].de;
+            register_popup(usuario, usuario);
+            imprimirChatMsj(usuario, data.mensajes[0].mensaje);
+        }
+    }).fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+    });
+}
+function getChatNuevos(de){
+    var respuesta;
+    $.ajax({
+        url : BASE_URL+'/chat/nuevos/'+de+'-'+nick,
+        type : 'GET',
+        async: false,  
+        crossDomain : true,
+        dataType : 'json',
+    }).done(function(data, status, jqxhr) {
+        if(data != undefined)
+        {
+            $.each(data.mensajes, function(i, v) {
+                usuario = v.de;
+                if(usuario == nick)
+                    imprimirChatMsjTo(v.para, v.mensaje);
+                else
+                    imprimirChatMsj(v.de, v.mensaje);
+                console.log(v.to + " " + v.de);
+            });
+            $(".popup-messages").animate({scrollTop: 1000000});
+        }
+    }).fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+    });
+}
+function imprimirChatMsj(FromUsr, msj){
+    var id = FromUsr;
+    var mensaje = "<div class='from'>";
+    mensaje+=msj;
+    mensaje+="</div>";
+    $("#" + id + " .popup-messages").append(mensaje);
+    console.log(mensaje);
+}
+function imprimirChatMsjTo(toUsr, msj){//es tuyo
+    var id = toUsr;
+    var mensaje = "<div class='to'>";
+    mensaje+=msj;
+    mensaje+="</div>";
+    $("#" + id + " .popup-messages").append(mensaje);
+    console.log(mensaje);
+}
 function printarBarDescripcion(bar){
     console.log(bar.bares[0].ID);
-    $("#fotoBar").attr("src", "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + bar.bares[0].ID +".jpg");
+    $("#fotoBar").attr("src", "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + bar.bares[0].ID +".png");
     $(".titulo").html(bar.bares[0].nombre);
-    $("#cosas").html(bar.bares[0].descripcion + "<br /><div style='float: none;margin-left: auto;margin-right: auto;' class='col-lg-4'><h3 style='display:inline'>Nota:    </h3><h2 style='display:inline' class='nota'>"+bar.bares[0].nota+"</h2></div><div>Danos tu opinion: <div id='dm2' class='divValoracion'><div class='estrella_1 estrellasValoracion'></div><div class='estrella_2 estrellasValoracion'></div><div class='estrella_3 estrellasValoracion'></div><div class='estrella_4 estrellasValoracion'></div><div class='estrella_5 estrellasValoracion'></div></div></div>");
+    $("#cosas").html(bar.bares[0].descripcion + "<br /><div style='float: none;margin-left: auto;margin-right: auto;' class='col-lg-4'><h3 style='display:inline'>Nota:    </h3><h2 style='display:inline' class='nota'>"+bar.bares[0].nota+"</h2></div></div></div>");
     printComentarios(bar.bares[0].ID);
     $('.estrellasValoracion').hover(
         function() {
@@ -226,7 +366,7 @@ function initialize() {
 
 function borrarComentario(idcmt, barId){
     $.ajax({
-        url: 'http://localhost:8080/bareando-api/comentarios/'+idcmt,
+        url: BASE_URL+'/comentarios/'+idcmt,
         type: 'DELETE',
         async: false,
         cache: false,
@@ -274,7 +414,7 @@ function printComentarios(barId){
             "mensaje": "poooor queeeeeeeee????",
             "nick": "adricouci"*/
         $.ajax({
-            url: 'http://localhost:8080/bareando-api/comentarios',
+            url: BASE_URL+'/comentarios',
             type: 'POST',
             data: coment,
             async: false,
@@ -373,7 +513,7 @@ function PrinterBares(objeto){
             if(nombre != undefined){
                 var descr = BAR.descripcion;
                 var nota = BAR.nota;
-                appender = stringHtml.concat("<div class='row'><div class='col-md-7'><img class='img-responsive' src='http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + id + ".jpg' alt=''></div><div class='col-md-5'>      <h3>", nombre, "</h3><h4>Nota: ", nota, "</h4><p>", descr, "</p><a id='"+id+"' class='btn btn-primary descr' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a></div></div><hr>");
+                appender = stringHtml.concat("<div class='row'><div class='col-md-7'><img class='img-responsive' src='http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + id + ".png' alt=''></div><div class='col-md-5'>      <h3>", nombre, "</h3><h4>Nota: ", nota, "</h4><p>", descr, "</p><a id='"+id+"' class='btn btn-primary descr' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a></div></div><hr>");
                 $("#pepe").append(appender);
             }
         });      
@@ -413,7 +553,7 @@ function PrinterBarPrincipal(objeto){
             $(".titulo").html(nombre);
             $(".descripcion").html(descr + "<br><br><a id='"+id+"' class='btn btn-primary descr' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a>");
             $(".nota").html(nota);
-            document.getElementById("photo").src = "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + BAR[0].ID + ".jpg";
+            document.getElementById("photo").src = "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + BAR[0].ID + ".png";
         });
     }
 
@@ -434,7 +574,7 @@ function printBarPrincipal(objeto){
             $(".titulo").html(nombre);
             $(".descripcion").html(descr + "<br><br><a id='"+id+"' class='btn btn-primary descr' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a>");
             $(".nota").html(nota);
-            document.getElementById("photo").src = "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + BAR[0].ID + ".jpg";
+            document.getElementById("photo").src = "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + BAR[0].ID + ".png";
         }
     });
 }

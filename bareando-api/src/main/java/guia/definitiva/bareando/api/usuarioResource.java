@@ -57,6 +57,7 @@ public class usuarioResource {
 				stmt.executeUpdate();
 
 				ResultSet rs = stmt.getGeneratedKeys();
+				nuevo.setLoginSuccessful(true);
 
 				if (rs.next()) {
 					nuevo.setNick(rs.getString("nick"));
@@ -205,7 +206,40 @@ public class usuarioResource {
 
 		return user;
 	}
+	private String GET_ROL_USER = "select rolename from user_roles where nick=?;";
+	public String getRolUser(String nick){
+		String role = "";
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException(
+					"No se ha podido conectar con la base de datos",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(GET_ROL_USER);
+			stmt.setString(1, nick);
+			ResultSet rs = stmt.executeQuery();
 
+			if (rs.next()) {
+				role = rs.getString("rolename");
+			} 
+		} catch (SQLException e) {
+			System.out.println(e);
+			throw new ServerErrorException("Error: " + e,
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+		return role;
+	}
 	@POST
 	@Path("/login")
 	@Produces(MediaType.BAREANDO_USER)
@@ -218,9 +252,12 @@ public class usuarioResource {
 		String pwdDigest = DigestUtils.md5Hex(user.getPass());
 		String storedPwd = getUsuarioNick(user.getNick()).getPass();
 
-		user.setLoginSuccessful(pwdDigest.equals(storedPwd));
-		user.setPass(null);
+		usuario ok = new usuario();
+		ok = getUsuarioNick(user.getNick());
+		ok.setRole(getRolUser(user.getNick()));
+		ok.setPass(null);
+		ok.setLoginSuccessful(pwdDigest.equals(storedPwd));
 
-		return user;
+		return ok;
 	}
 }
