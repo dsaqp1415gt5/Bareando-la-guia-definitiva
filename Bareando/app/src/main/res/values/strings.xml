@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Bareando</string>
+    <string name="register"><u>Registrarse</u></string>
+    <string name="invitado"><u>Entrar como invitado</u></string>
+    <string name="action_settings">Settings</string>
+    <string name="FiltrarGenero">Filtrar por genero</string>
+    <string name="FiltrarNota">Filtrar por nota</string>
+    <string name="intro">Danos una foto de perfil!</string>
+    <string name="picture">Imagen</string>
+    <string name="capture">Capturar foto</string>
+    <string name="CargarComentarios">Cargar Comentarios</string>
+    <string name="comentario">Comentario</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="enviar">Enviar</string>
+    <string name="post">Post</string>
+    <string name="cerrar_sesion">Cerrar Sesion</string>
+    <string name="cervezas">Cervezas</string>
+    <string name="tapas">Tapas</string>
+    <string name="vinos">Vinos</string>
+    <string name="cocktails">Cocktails</string>
+    <string name="nota_mas_a_menos">Nota: Descendente</string>
+    <string name="nota_menos_a_mas">Nota: Ascendente</string>
+    <string name="volver">Volver al bar</string>
+    <string name="add_comment">Añadir comentario</string>
+    <string name="mostrar_ubicacion">Mostrar ubicación del bar</string>
+    <string name="EnviarFoto">Enviar</string>
+    <string name="despues">Más tarde</string>
+    <string name="nick">Nick</string>
+    <string name="password">Contraseña</string>
+    <string name="entrar">Entrar</string>
+    <string name="nombre">Nombre</string>
+    <string name="email">Email</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="mantener">Recuerda mis datos</string>
+</resources>

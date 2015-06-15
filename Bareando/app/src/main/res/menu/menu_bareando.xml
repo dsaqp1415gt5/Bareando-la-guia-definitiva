@@ -1,0 +1,49 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".BareandoActivity">
+
+    <item
+        android:id="@+id/filter_Cervezas"
+        android:title="@string/cervezas"
+        android:orderInCategory="1"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_Copas"
+        android:title="@string/cocktails"
+        android:orderInCategory="2"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_Tapas"
+        android:title="@string/tapas"
+        android:orderInCategory="3"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_Vinos"
+        android:title="@string/vinos"
+        android:orderInCategory="4"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_nota_des"
+        android:title="@string/nota_mas_a_menos"
+        android:orderInCategory="5"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_nota_asc"
+        android:title="@string/nota_menos_a_mas"
+        android:orderInCategory="6"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/cerrarsesion"
+        android:title="@string/cerrar_sesion"
+        android:orderInCategory="7"
+        app:showAsAction="always" />
+
+</menu>

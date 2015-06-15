@@ -1,0 +1,28 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ComentariosActivity">
+
+    <item
+        android:id="@+id/PostComent"
+        android:title="@string/add_comment"
+        android:orderInCategory="1"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/Volver"
+        android:title="@string/volver"
+        android:orderInCategory="2"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/cerrarsesion"
+        android:title="@string/cerrar_sesion"
+        android:orderInCategory="3"
+        app:showAsAction="always" />
+
+
+</menu>

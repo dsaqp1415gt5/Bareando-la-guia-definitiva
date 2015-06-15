@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="20dip"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/tvUsername"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:hint="@string/nombre"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/tvNickName"
+        android:layout_marginTop="15dip"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:hint="@string/nick"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/tvEmail"
+        android:layout_marginTop="15dip"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/tvPass"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:layout_marginTop="15dip"
+        android:layout_marginBottom="30dip" />
+
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/registrarse"
+        android:onClick="registro"
+        android:paddingLeft="15dip"
+        android:paddingRight="15dip"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="124dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cancelar"
+        android:id="@+id/btn_Cancel"
+        android:onClick="cancel"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/register_error"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dip"
+        android:layout_marginBottom="40dip"
+
+        android:gravity="center"
+        android:textSize="20dip"
+        android:textColor="#0b84aa"/>
+
+</LinearLayout>
