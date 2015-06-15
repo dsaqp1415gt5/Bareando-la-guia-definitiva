@@ -1,7 +1,7 @@
-var API_BASE_URL = "http://localhost:8080/bareando-api";
-//var API_BASE_URL = "http://147.83.7.200:8080/bareando-api
-//var BASE_URL = "http://147.83.7.200:8080/bareando-api";
-var BASE_URL = "http://localhost:8080/bareando-api";
+//var API_BASE_URL = "http://localhost:8080/bareando-api";
+var API_BASE_URL = "http://147.83.7.200:8080/bareando-api
+var BASE_URL = "http://147.83.7.200:8080/bareando-api";
+//var BASE_URL = "http://localhost:8080/bareando-api";
 var incorrectNameInput = true;
 var incorrectPassInput = true;
 

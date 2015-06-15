@@ -2,8 +2,8 @@ var apiUrl = new uriObject();
 var oneBar = new uriObject();
 oneBar.updateUrl();
 apiUrl.updateUrl();
-var BASE_URL = "http://localhost:8080/bareando-api";
-//var BASE_URL = "http://147.83.7.200:8080/bareando-api";
+//var BASE_URL = "http://localhost:8080/bareando-api";
+var BASE_URL = "http://147.83.7.200:8080/bareando-api";
 var nick = $.cookie('nick');
 var pass = $.cookie('pass');
 var rol =  $.cookie('rol');
@@ -126,6 +126,67 @@ $(document).ready(function(){
                 } 
                 apiUrl.perpage = 3;
                 apiUrl.updateUrl();
+                PrinterBares(apiUrl.makeGetRequest());
+                printarPaginasEnPaginacion(apiUrl.paginas);
+                startSearchOptions();
+
+                var check = '#' + genero.slice(0, -1);
+                $(check).prop( "checked", true );
+            });
+        });
+        $(".se-pre-con").delay(700).fadeOut("slow");
+    });
+
+    $('body').on('click', '#tapass', function(event){
+        var genero = event.target.id;
+        $(".se-pre-con").fadeIn("fast", function(){
+            $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
+            $("#cuerpo").load('bares.html #lista', function(){
+                apiUrl.restartUrlParameters();
+                apiUrl.genero1 = "tapas";
+                apiUrl.perpage = 3;
+                apiUrl.updateUrl();
+                console.log(apiUrl.url);
+                PrinterBares(apiUrl.makeGetRequest());
+                printarPaginasEnPaginacion(apiUrl.paginas);
+                startSearchOptions();
+
+                var check = '#' + genero.slice(0, -1);
+                $(check).prop( "checked", true );
+            });
+        });
+        $(".se-pre-con").delay(700).fadeOut("slow");
+    });
+    $('body').on('click', '#cocktailss', function(event){
+        var genero = event.target.id;
+        $(".se-pre-con").fadeIn("fast", function(){
+            $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
+            $("#cuerpo").load('bares.html #lista', function(){
+                apiUrl.restartUrlParameters();
+                apiUrl.genero1 = "cocktails";
+                apiUrl.perpage = 3;
+                apiUrl.updateUrl();
+                console.log(apiUrl.url);
+                PrinterBares(apiUrl.makeGetRequest());
+                printarPaginasEnPaginacion(apiUrl.paginas);
+                startSearchOptions();
+
+                var check = '#' + genero.slice(0, -1);
+                $(check).prop( "checked", true );
+            });
+        });
+        $(".se-pre-con").delay(700).fadeOut("slow");
+    });
+    $('body').on('click', '#vinoss', function(event){
+        var genero = event.target.id;
+        $(".se-pre-con").fadeIn("fast", function(){
+            $('#cuerpo').html("<div style='width:100%; height: 100%; background-color: white;'></div>");
+            $("#cuerpo").load('bares.html #lista', function(){
+                apiUrl.restartUrlParameters();
+                apiUrl.genero1 = "vinos";
+                apiUrl.perpage = 3;
+                apiUrl.updateUrl();
+                console.log(apiUrl.url);
                 PrinterBares(apiUrl.makeGetRequest());
                 printarPaginasEnPaginacion(apiUrl.paginas);
                 startSearchOptions();
