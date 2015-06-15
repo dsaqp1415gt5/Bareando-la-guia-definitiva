@@ -176,20 +176,27 @@ otro elemento que se pueda ocultar al minimizar la barra -->
                 </div>
             </div>
         </div>
-        <div style="z-index:9999;" class="chat-sidebar">
+        <div id="chatMenu" style="z-index:9999;" class="chat-sidebar">
             <div class="sidebar-name">
-                <!-- Pass username and display name to register popup -->
-                <a href="javascript:register_popup('adricouci', 'adricouci');">
-                    <img width="30" height="30" src="img/bares/adricouci.png" />
-                    <span>AdriCouci</span>
-                </a>
-            </div>
-            <div class="sidebar-name">
-                <a href="javascript:register_popup('makitos666', 'makitos666');">
-                    <img width="30" height="30" src="img/bares/makitos666.png" />
-                    <span>makitos666</span>
-                </a>
-            </div>
+                <div class="input-group">
+                    <input id="amigoMas" name="amigoMas" class="form-control" type="text" placeholder="nuevo amigo" required="">
+                    <span class="input-group-addon">     
+                        <button id="anadirAmigo">+</button>     
+                    </span>
+                </div>
+            </div>  
+            <!-- <div class="sidebar-name">
+<a href="javascript:register_popup('adricouci', 'adricouci');">
+<img width="30" height="30" src="img/bares/adricouci.png" />
+<span>AdriCouci</span>
+</a>
+</div>
+<div class="sidebar-name">
+<a href="javascript:register_popup('makitos666', 'makitos666');">
+<img width="30" height="30" src="img/bares/makitos666.png" />
+<span>makitos666</span>
+</a>
+</div>-->
         </div>
         <div id="chats"></div>
     </body>

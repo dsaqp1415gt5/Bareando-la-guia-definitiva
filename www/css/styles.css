@@ -399,7 +399,7 @@
     overflow-y: scroll;
 }
 
-.from{
+.de{
     text-align: right;
     padding: 5px;
     margin: 4px;
@@ -409,7 +409,7 @@
     float: right;
 }
 
-.to{
+.para{
     text-align: left;
     padding: 5px;
     margin: 4px;

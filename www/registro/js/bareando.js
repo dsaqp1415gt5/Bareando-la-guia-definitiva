@@ -1,4 +1,7 @@
-var API_BASE_URL = "http://147.83.7.200:8080/bareando-api";
+var API_BASE_URL = "http://localhost:8080/bareando-api";
+//var API_BASE_URL = "http://147.83.7.200:8080/bareando-api
+//var BASE_URL = "http://147.83.7.200:8080/bareando-api";
+var BASE_URL = "http://localhost:8080/bareando-api";
 var incorrectNameInput = true;
 var incorrectPassInput = true;
 
@@ -22,6 +25,30 @@ $(document).ready(function(){
             $("#inputPassDos").css({ background: "red"});
             $("#inputPass").css({ background: "red"});
             incorrectPassInput = true;
+        }
+    });
+
+    $("form#regis").submit(function(event){
+        event.preventDefault();
+        var ok = comprobarCampos();
+        if(ok == true){
+            var formData = new FormData($("form#regis")[0]);
+            var nick = $('#inputNick').val();
+            console.log(nick);
+            $.ajax({
+                url: BASE_URL + '/foto/upload-'+ nick,
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                processData: false,
+                contentType: false,
+            }).done(function(data, status, jqxhr) {
+                console.log(status);
+            }).fail(function(jqXHR, textStatus) {
+                console.log(textStatus);
+                console.log(jqXHR);
+            });
         }
     });
 });
@@ -105,10 +132,9 @@ function registrar(url) {
                 data : data,
             }).done(function(data, status, jqxhr) {
                 $(".wizard-container").html("Registrado correctamente, espere un momento...");
-                //se puede mejorar
                 setTimeout(function(){
                     $(location).attr('href', "../index.html");
-                }, 2000);
+                }, 4000);
             }).fail(function() {
                 $(".wizard-container").effect("shake", {times:4}, 1000 );
             });

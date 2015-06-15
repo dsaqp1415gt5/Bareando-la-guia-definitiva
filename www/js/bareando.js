@@ -2,8 +2,8 @@ var apiUrl = new uriObject();
 var oneBar = new uriObject();
 oneBar.updateUrl();
 apiUrl.updateUrl();
-//var BASE_URL = "http://localhost:8080/bareando-api";
-var BASE_URL = "http://147.83.7.200:8080/bareando-api";
+var BASE_URL = "http://localhost:8080/bareando-api";
+//var BASE_URL = "http://147.83.7.200:8080/bareando-api";
 var nick = $.cookie('nick');
 var pass = $.cookie('pass');
 var rol =  $.cookie('rol');
@@ -31,6 +31,7 @@ $(document).ready(function(){
         $.ajaxSetup({
             headers: { 'Authorization': "Basic " + btoa(nick + ':' + pass)}
         });
+        getAmigos();
     }else{
         console.log("login");
 
@@ -82,6 +83,27 @@ $(document).ready(function(){
         return false;
     });
 
+    $("#anadirAmigo").click(function(){
+        var nuevoUser= $("#amigoMas").val();
+        var bolean = comprobarNick(nuevoUser)
+        if(bolean){
+            $.ajax({//amigo-{nick}-{nock}
+                url: BASE_URL + '/chat/amigo-' + nick + '-' + nuevoUser,
+                type: 'POST',
+                async: false,  
+                crossDomain : true,
+                dataType : 'json',
+            }).done(function(data, status, jqxhr) {
+                var html = "";
+                html+="<div class='sidebar-name'><a href=\"javascript:register_popup('"+nuevoUser+"', '"+nuevoUser+"');\"><img width='30' height='30' src='img/bares/"+nuevoUser+".png' onerror=\"this.src='img/user.jpg'\" /><span>"+nuevoUser+"</span></a></div>";
+                $("#chatMenu").append(html);
+            }).fail(function(jqXHR, textStatus) {
+                console.log(textStatus);
+                console.log(jqXHR);
+            });
+        }
+        $("#amigoMas").val("")
+    });
 
     $('#tapas, #cervezas, #vinos, #cocktails').click(function(event){
         var genero = event.target.id;
@@ -230,8 +252,9 @@ $(document).ready(function(){
                             oneBar.restartUrlParameters();
                             oneBar.id = idBar;
                             oneBar.updateUrl();
-                            printarBarDescripcion(oneBar.makeGetRequest());
-                            initialize();
+                            var Bar = oneBar.makeGetRequest();
+                            printarBarDescripcion(Bar);
+                            initialize(Bar.bares[0].lat, Bar.bares[0].lon);
                         });
                     });
                     $(".se-pre-con").delay(700).fadeOut("slow");
@@ -256,8 +279,8 @@ $(document).ready(function(){
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
     });
-    
-     $('.descr').click(function(event){
+
+    $('.descr').click(function(event){
         var idBar = event.target.id;
         console.log(idBar);
         $(".se-pre-con").fadeIn("fast", function(){
@@ -269,8 +292,9 @@ $(document).ready(function(){
                 oneBar.restartUrlParameters();
                 oneBar.id = idBar;
                 oneBar.updateUrl();
-                printarBarDescripcion(oneBar.makeGetRequest());
-                initialize();
+                var Bar = oneBar.makeGetRequest();
+                printarBarDescripcion(Bar);
+                initialize(Bar.bares[0].lat, Bar.bares[0].lon);
             });
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
@@ -278,6 +302,43 @@ $(document).ready(function(){
 
 });
 
+function getAmigos(){
+    $.ajax({
+        url : BASE_URL + '/chat/amigos-'+nick,
+        type : 'GET',
+        async: false,  
+        crossDomain : true,
+        dataType : 'json',
+    }).done(function(data, status, jqxhr) {
+        $.each(data.usuarios, function(i, v) {
+            var html = "";
+            html+="<div class='sidebar-name'><a href=\"javascript:register_popup('"+v.nick+"', '"+v.nick+"');\"><img width='30' height='30' src='img/bares/"+v.nick+".png' onerror=\"this.src='img/user.jpg'\" /><span>"+v.nick+"</span></a></div>";
+            $("#chatMenu").append(html);
+        });
+
+        /*<div class='sidebar-name'><a href='javascript:register_popup('adricouci', 'adricouci');'><img width='30' height='30' src='img/bares/adricouci.png' /><span>AdriCouci</span></a></div>*/
+    }).fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+        console.log(jqXHR);
+    });
+}
+
+function comprobarNick(nick){
+    var urlNick = BASE_URL + '/usuarios/' + nick;
+    var res;
+    $.ajax({
+        url : urlNick,
+        type : 'GET',
+        crossDomain : true,
+        async: false,  
+        dataType : 'json',
+    }).done(function(data, status, jqxhr) {
+        res = data;
+    }).fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+    });
+    return res;
+}
 function getChat(){
     var respuesta;
     $.ajax({
@@ -291,7 +352,8 @@ function getChat(){
         {
             usuario = data.mensajes[0].de;
             register_popup(usuario, usuario);
-            imprimirChatMsj(usuario, data.mensajes[0].mensaje);
+            imprimirChatMsjTo(usuario, data.mensajes[0].mensaje, false);
+            $(".popup-messages").animate({scrollTop: 1000000});
         }
     }).fail(function(jqXHR, textStatus) {
         console.log(textStatus);
@@ -311,9 +373,9 @@ function getChatNuevos(de){
             $.each(data.mensajes, function(i, v) {
                 usuario = v.de;
                 if(usuario == nick)
-                    imprimirChatMsjTo(v.para, v.mensaje);
+                    imprimirChatMsj(v.para, v.mensaje, true);
                 else
-                    imprimirChatMsj(v.de, v.mensaje);
+                    imprimirChatMsjTo(v.de, v.mensaje, true);
                 console.log(v.to + " " + v.de);
             });
             $(".popup-messages").animate({scrollTop: 1000000});
@@ -322,20 +384,27 @@ function getChatNuevos(de){
         console.log(textStatus);
     });
 }
-function imprimirChatMsj(FromUsr, msj){
+function imprimirChatMsj(FromUsr, msj, pop){
     var id = FromUsr;
-    var mensaje = "<div class='from'>";
+    var mensaje = "<div class='de'>";
     mensaje+=msj;
     mensaje+="</div>";
-    $("#" + id + " .popup-messages").append(mensaje);
+    if(pop)
+        $("#" + id + " .popup-messages").prepend(mensaje);
+    else
+        $("#" + id + " .popup-messages").append(mensaje);
     console.log(mensaje);
 }
-function imprimirChatMsjTo(toUsr, msj){//es tuyo
+function imprimirChatMsjTo(toUsr, msj, pop){//es tuyo
     var id = toUsr;
-    var mensaje = "<div class='to'>";
+    var mensaje = "<div class='para'>";
     mensaje+=msj;
     mensaje+="</div>";
-    $("#" + id + " .popup-messages").append(mensaje);
+    if(pop)
+        $("#" + id + " .popup-messages").prepend(mensaje);
+    else
+        $("#" + id + " .popup-messages").append(mensaje);
+
     console.log(mensaje);
 }
 function printarBarDescripcion(bar){
@@ -355,14 +424,22 @@ function printarBarDescripcion(bar){
         }
     );
 }
-function initialize() {
+function initialize(lat, lon) {
     var mapCanvas = document.getElementById('mapa');
+    var myLatlng = new google.maps.LatLng(lat, lon);
     var mapOptions = {
-        center: new google.maps.LatLng(44.5403, -78.5463),
+        center: myLatlng,
         zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     var map = new google.maps.Map(mapCanvas, mapOptions);
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        title: 'Hello World!'
+    });
+    marker.setMap(map);
+
 }
 
 function borrarComentario(idcmt, barId){
@@ -502,6 +579,7 @@ function PrinterBares(objeto){
     apiUrl.paginas = this.bar.paginas;
     $("#pepe").html("");
     var stringHtml = "";
+    var html="";
     $.each(this.bar, function(i, v) {
         this.bares = v;
         if(v.length == 0)
@@ -514,11 +592,16 @@ function PrinterBares(objeto){
             if(nombre != undefined){
                 var descr = BAR.descripcion;
                 var nota = BAR.nota;
-                appender = stringHtml.concat("<div class='row'><div class='col-md-7'><img class='img-responsive' src='http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + id + ".png' alt=''></div><div class='col-md-5'>      <h3>", nombre, "</h3><h4>Nota: ", nota, "</h4><p>", descr, "</p><a id='"+id+"' class='btn btn-primary descr' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a></div></div><hr>");
-                $("#pepe").append(appender);
+                html+="<div id='"+nombre+"' class='row'>";
+                if(rol == "admin"){
+                    html+="<div onclick='borrarBar( " + id + ", \""+nombre+"\" );' style='float: right; height: 10px; width: 11px; background: url(\"../img/x.png\");'></div>";
+                }
+                html+="<div class='col-md-7'><img class='img-responsive' src='http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + id + ".png' alt=''></div><div class='col-md-5'>      <h3>" + nombre + "</h3><h4>Nota: " + nota + "</h4><p>"+  descr + "</p><a id='"+id+"' class='btn btn-primary descr' href='#'>Mas detalles...<span class='glyphicon glyphicon-chevron-right'></span></a></div></div><hr>";
             }
         });      
     });
+    $("#pepe").html(html);
+    /*<div style=" float: right; height: 10px; width: 11px; background: url(../img/x.png;);"></div>*/
     $('.descr').click(function(event){
         var idBar = event.target.id;
         console.log(idBar);
@@ -530,9 +613,10 @@ function PrinterBares(objeto){
                 console.log(xhr);
                 oneBar.restartUrlParameters();
                 oneBar.id = idBar;
-                oneBar.updateUrl();
-                printarBarDescripcion(oneBar.makeGetRequest());
-                initialize();
+                oneBar.updateUrl();//bar.bares[0].lat
+                var Bar = oneBar.makeGetRequest();
+                printarBarDescripcion(Bar);
+                initialize(Bar.bares[0].lat, Bar.bares[0].lon);
             });
         });
         $(".se-pre-con").delay(700).fadeOut("slow");
@@ -577,5 +661,21 @@ function printBarPrincipal(objeto){
             $(".nota").html(nota);
             document.getElementById("photo").src = "http://147.83.7.200/tgrupo5.dsa/public_html/img/bares/" + BAR[0].ID + ".png";
         }
+    });
+}
+
+function borrarBar(idBorrar, nombre){
+    $.ajax({
+        url: BASE_URL + '/bares/' + idBorrar,
+        type: 'DELETE',
+        async: false,  
+        crossDomain : true,
+        dataType : 'json',
+    }).done(function(data, status, jqxhr) {
+        console.log(data);
+        $("#"+nombre).hide();
+    }).fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+        console.log(jqXHR);
     });
 }

@@ -448,7 +448,7 @@ public class barResource {
 	@Produces("image/png")
 	public Response getBarImg(@PathParam("id") String id) {
 		File repositoryFile = new File(
-				"/var/www/tgrupo5.dsa/public_html/img/bares/" + id + ".jpg");
+				"/var/www/tgrupo5.dsa/public_html/img/bares/" + id + ".png");
 		return returnFile(repositoryFile);
 	}
 	

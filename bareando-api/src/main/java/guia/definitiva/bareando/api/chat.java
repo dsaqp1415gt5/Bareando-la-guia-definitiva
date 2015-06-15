@@ -2,6 +2,8 @@ package guia.definitiva.bareando.api;
 
 import guia.definitiva.bareando.model.chatMsj;
 import guia.definitiva.bareando.model.chatMsjCollection;
+import guia.definitiva.bareando.model.userCollection;
+import guia.definitiva.bareando.model.usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,6 +33,91 @@ public class chat {
 	private String SELECT = "select * from chat where para = ? order by id desc limit 1;";
 	private String SELECT_NUEVOS = "select * from chat where (para = ? and de = ?) or (para = ? and de = ?) order by id desc limit 25;";
 
+	
+	private String GET_AMIGOS = "SELECT amigo2 FROM amigos where amigo1 =?;";
+	
+	@GET
+	@Path("amigos-{de}")
+	public userCollection getFriends(@PathParam("de") String de){
+		userCollection usuarios = new userCollection();
+		
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(GET_AMIGOS);
+			stmt.setString(1, de);
+
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				usuario user = new usuario();
+				user.setNick(rs.getString("amigo2"));
+				usuarios.addUser(user);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e);
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+		return usuarios;
+	}
+
+	private String AMIGO = "insert into amigos values (?, ?)";
+	//insert into amigos values ("" ,"");
+	@POST
+	@Path("amigo-{nick}-{nock}")
+	public int addFriend(@PathParam("nick") String para, @PathParam("nock") String de){
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException(
+					"No se ha podido conectar con la base de datos",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		try {
+			stmt = conn.prepareStatement(AMIGO,
+					Statement.RETURN_GENERATED_KEYS);
+			stmt2 = conn.prepareStatement(AMIGO,
+							Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, de);
+			stmt.setString(2, para);			
+			stmt2.setString(2, de);
+			stmt2.setString(1, para);
+
+			stmt.executeUpdate();
+			stmt2.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+		return 0;
+	}
+	
 	@GET
 	@Path("/nuevos/{de}-{para}")
 	public chatMsjCollection getUltimosMensajes(@PathParam("para") String para, @PathParam("de") String de) {

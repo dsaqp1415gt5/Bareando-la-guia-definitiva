@@ -34,7 +34,7 @@
 
                         <!--      Wizard container        -->   
                         <div class="wizard-container"> 
-                            <form action="" method="">
+                            <form id="regis" action="" method="">
                                 <div class="card wizard-card ct-wizard-orange" id="wizard">
 
                                     <!--        You can switch "ct-wizard-orange"  with one of the next bright colors: "ct-wizard-blue", "ct-wizard-green", "ct-wizard-orange", "ct-wizard-red"             -->
@@ -47,7 +47,6 @@
                                     </div>
                                     <ul>
                                         <li><a href="#about" data-toggle="tab">Cuenta</a></li>
-                                        <li><a href="#account" data-toggle="tab">Personal</a></li>
                                         <li><a href="#address" data-toggle="tab">Seguridad</a></li>
                                     </ul>
                                     <div class="tab-content">
@@ -58,7 +57,7 @@
                                                     <div class="picture-container">
                                                         <div class="picture">
                                                             <img src="images/default-avatar.png" class="picture-src" id="wizardPicturePreview" title=""/>
-                                                            <input type="file" id="wizard-picture">
+                                                            <input name="file" type="file" id="wizard-picture" />
                                                         </div>
                                                         <h6>Elige una imagen</h6>
                                                     </div>
@@ -78,43 +77,6 @@
                                                     <div class="form-group">
                                                         <label>E-mail</label>
                                                         <input id="inputMail" type="email" class="form-control" placeholder="monachita@monitianos.com">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab-pane" id="account">
-                                            <h4 class="info-text"> Que tipo de bar te gusta mas? </h4>
-                                            <div class="row">
-                                                <div class="col-sm-10 col-sm-offset-1">
-                                                    <div class="col-sm-4">
-                                                        <div class="choice" data-toggle="wizard-radio">
-                                                            <input type="radio" name="job" value="Design">
-                                                            <div class="icon">
-                                                                <i class="fa fa-pencil"></i>
-                                                                que no
-                                                            </div>
-                                                            <h6>Copas</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <div class="choice" data-toggle="wizard-radio">
-                                                            <input type="radio" name="job" value="Code">
-                                                            <div class="icon">
-                                                                <i class="fa fa-terminal"></i>
-                                                            </div>
-                                                            <h6>Cerveza</h6>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <div class="choice"  data-toggle="wizard-radio">
-                                                            <input type="radio" name="job" value="Develop">
-                                                            <div class="icon">
-                                                                <i class="fa fa-laptop"></i>
-                                                            </div>
-                                                            <h6>vino</h6>
-                                                        </div>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,7 +105,7 @@
                                     <div class="wizard-footer">
                                         <div class="pull-right">
                                             <input type='button' class='btn btn-next btn-fill btn-warning btn-wd btn-sm' name='next' value='Siguiente' />
-                                            <input type='button' id="fin" class='btn btn-finish btn-fill btn-warning btn-wd btn-sm' name='finish' value='Acabar' />
+                                            <input type='submit' id="fin" class='btn btn-finish btn-fill btn-warning btn-wd btn-sm' name='finish' value='Acabar' />
 
                                         </div>
                                         <div class="pull-left">

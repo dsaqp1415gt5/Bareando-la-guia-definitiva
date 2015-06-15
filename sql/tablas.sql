@@ -37,3 +37,15 @@ CREATE TABLE user_roles (
         ON DELETE CASCADE,
     PRIMARY KEY (nick, rolename)
 ); 	
+CREATE TABLE amigos (
+ 	amigo1 varchar(45) NOT NULL,
+  	amigo2 varchar(45) NOT NULL
+)
+
+CREATE TABLE chat (
+	id int(11) NOT NULL AUTO_INCREMENT,
+	de varchar(50) NOT NULL,
+	para varchar(50) NOT NULL,
+	mensaje varchar(250) NOT NULL,
+	PRIMARY KEY (id)
+)
