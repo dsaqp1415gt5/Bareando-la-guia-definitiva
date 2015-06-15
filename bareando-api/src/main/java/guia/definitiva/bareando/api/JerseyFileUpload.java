@@ -55,7 +55,7 @@ public class JerseyFileUpload {
 			ImageIO.write(
 					image,
 					"png",
-					new File("C:/pepe/" + filename));
+					new File("/var/www/tgrupo5.dsa/public_html/img/bares/" + filename));
 		} catch (IOException e) {//new File("C:/pepe/" + filename));/var/www/tgrupo5.dsa/public_html/img/bares/
 			throw new InternalServerErrorException(
 					"Something has been wrong when converting the file.");
