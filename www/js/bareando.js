@@ -23,7 +23,8 @@ $(document).ready(function(){
         console.log("hola " + nick);
         $("#loged").html("");
         $("#logout").html("<a href='#'>Logout</a>");
-        $("#perfil").show();
+        $("#perfil").show();//chatMenu
+        $("#chatMenu").show();//chatMenu
         if(rol == "admin"){
             $("#addBar").show();
         }
@@ -34,6 +35,9 @@ $(document).ready(function(){
         getAmigos();
     }else{
         console.log("login");
+        $("#perfil").hide();//chatMenu
+        $("#chatMenu").hide();//chatMenu
+        $("#addBar").hide();
 
     }
     apiUrl.random = "R";
